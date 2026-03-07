@@ -4,13 +4,14 @@
   --primary-accent: #b45309;
   /* Warm Amber/Gold */
   --primary-color: var(--primary);
-  --secondary-color: #475569;
+  --secondary-color: #94a3b8;
   --accent-color: var(--primary-accent);
-  --background: #fdfaf7;
-  /* Soft Beige Off-white */
-  --foreground: #0f172a;
-  --bg-pattern: radial-gradient(at top right, #fff7ed 0%, transparent 50%),
-    radial-gradient(at bottom left, #f1f5f9 0%, transparent 50%);
+  --background: #fdfbf7;
+  /* White Sand Luxury */
+  --foreground: #1a1c20;
+  /* Deep Charcoal */
+  --bg-pattern: radial-gradient(at top left, #f5f2e8 0%, transparent 50%),
+    radial-gradient(at bottom right, #fcfaf2 0%, transparent 50%);
 }
 
 body {

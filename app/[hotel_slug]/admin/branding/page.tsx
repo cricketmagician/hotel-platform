@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useHotelBranding, saveHotelBranding, HotelBranding } from "@/utils/store";
-import { Palette, Layout, Type, Save, Check, RefreshCw } from "lucide-react";
+import { useHotelBranding, saveHotelBranding, HotelBranding, useSpecialOffers, saveSpecialOffer, deleteSpecialOffer, SpecialOffer } from "@/utils/store";
+import { Palette, Layout, Type, Save, Check, RefreshCw, Phone, Plus, Trash2, Image as ImageIcon, Tag, Utensils } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function BrandingPage() {
@@ -14,6 +14,11 @@ export default function BrandingPage() {
     const [config, setConfig] = useState<Partial<HotelBranding>>({});
     const [isSaving, setIsSaving] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+
+    // Special Offers State
+    const { offers, loading: loadingOffers } = useSpecialOffers(branding?.id);
+    const [newOffer, setNewOffer] = useState<Partial<SpecialOffer>>({ title: "", description: "", image_url: "", is_active: true });
+    const [isAddingOffer, setIsAddingOffer] = useState(false);
 
     useEffect(() => {
         if (branding) {
@@ -120,6 +125,19 @@ export default function BrandingPage() {
                                     )}
                                 </div>
                             </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Reception Contact Number</label>
+                                <div className="flex items-center bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3 focus-within:ring-2 transition-all">
+                                    <Phone className="w-4 h-4 text-slate-400 mr-3" />
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. +91 98765 43210"
+                                        value={config.receptionPhone || ""}
+                                        onChange={(e) => setConfig({ ...config, receptionPhone: e.target.value })}
+                                        className="bg-transparent w-full font-bold text-slate-900 outline-none"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </section>
 
@@ -167,29 +185,180 @@ export default function BrandingPage() {
 
                     <section className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
                         <div className="flex items-center mb-6">
-                            <RefreshCw className="w-5 h-5 text-blue-600 mr-3" style={{ color: config.primaryColor }} />
-                            <h2 className="text-xl font-black text-slate-900">Property Services</h2>
+                            <Utensils className="w-5 h-5 text-blue-600 mr-3" style={{ color: config.primaryColor }} />
+                            <h2 className="text-xl font-black text-slate-900">Dining Service Hours</h2>
                         </div>
+                        <p className="text-xs text-slate-400 font-medium mb-6">Set the operating hours for your restaurant services. Outside these hours, items will be greyed out for guests.</p>
+
                         <div className="space-y-6">
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Wi-Fi Network Name (SSID)</label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. Hotel_Guest"
-                                    value={config.wifiName || ""}
-                                    onChange={(e) => setConfig({ ...config, wifiName: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 focus:ring-2 transition-all outline-none"
-                                />
+                            {/* Breakfast */}
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center">
+                                    <div className="w-2 h-2 rounded-full bg-amber-500 mr-2"></div>
+                                    Breakfast Service
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Start Time</p>
+                                        <input
+                                            type="time"
+                                            value={config.breakfastStart || "07:00"}
+                                            onChange={(e) => setConfig({ ...config, breakfastStart: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold"
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">End Time</p>
+                                        <input
+                                            type="time"
+                                            value={config.breakfastEnd || "10:30"}
+                                            onChange={(e) => setConfig({ ...config, breakfastEnd: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold"
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Wi-Fi Password</label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. welcome123"
-                                    value={config.wifiPassword || ""}
-                                    onChange={(e) => setConfig({ ...config, wifiPassword: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 focus:ring-2 transition-all outline-none"
-                                />
+
+                            {/* Lunch */}
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div>
+                                    Lunch Service
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Start Time</p>
+                                        <input
+                                            type="time"
+                                            value={config.lunchStart || "12:30"}
+                                            onChange={(e) => setConfig({ ...config, lunchStart: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold"
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">End Time</p>
+                                        <input
+                                            type="time"
+                                            value={config.lunchEnd || "15:30"}
+                                            onChange={(e) => setConfig({ ...config, lunchEnd: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Dinner */}
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center">
+                                    <div className="w-2 h-2 rounded-full bg-indigo-500 mr-2"></div>
+                                    Dinner Service
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Start Time</p>
+                                        <input
+                                            type="time"
+                                            value={config.dinnerStart || "19:00"}
+                                            onChange={(e) => setConfig({ ...config, dinnerStart: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold"
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">End Time</p>
+                                        <input
+                                            type="time"
+                                            value={config.dinnerEnd || "22:30"}
+                                            onChange={(e) => setConfig({ ...config, dinnerEnd: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                        <div className="flex items-center mb-6">
+                            <Tag className="w-5 h-5 text-blue-600 mr-3" style={{ color: config.primaryColor }} />
+                            <h2 className="text-xl font-black text-slate-900">Special Offers Slider</h2>
+                        </div>
+
+                        {/* Current Offers List */}
+                        <div className="space-y-4 mb-8">
+                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Active Offers ({offers.length})</label>
+                            {offers.length === 0 ? (
+                                <p className="text-xs text-slate-400 italic">No offers active. Add one below.</p>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-3">
+                                    {offers.map((offer) => (
+                                        <div key={offer.id} className="flex items-center bg-slate-50 p-3 rounded-2xl border border-slate-100 group">
+                                            <div className="w-12 h-12 bg-slate-200 rounded-xl overflow-hidden mr-3">
+                                                {offer.image_url && <img src={offer.image_url} className="w-full h-full object-cover" />}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="text-xs font-black text-slate-900">{offer.title}</h4>
+                                                <p className="text-[10px] text-slate-400 truncate max-w-[150px]">{offer.description}</p>
+                                            </div>
+                                            <button
+                                                onClick={() => deleteSpecialOffer(offer.id)}
+                                                className="opacity-0 group-hover:opacity-100 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Add New Offer Form */}
+                        <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                            <h3 className="text-xs font-black text-slate-900 mb-4 flex items-center">
+                                <Plus className="w-3 h-3 mr-2" /> Add Promotional Offer
+                            </h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Offer Title (e.g. 20% Off Spa)"
+                                        value={newOffer.title}
+                                        onChange={(e) => setNewOffer({ ...newOffer, title: e.target.value })}
+                                        className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-bold outline-none focus:ring-1"
+                                    />
+                                </div>
+                                <div>
+                                    <textarea
+                                        placeholder="Description"
+                                        value={newOffer.description}
+                                        onChange={(e) => setNewOffer({ ...newOffer, description: e.target.value })}
+                                        className="w-full bg-white border border-slate-100 rounded-xl py-2 px-3 text-xs font-medium outline-none focus:ring-1 h-20 resize-none"
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <div className="flex-1 relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Image URL"
+                                            value={newOffer.image_url}
+                                            onChange={(e) => setNewOffer({ ...newOffer, image_url: e.target.value })}
+                                            className="w-full bg-white border border-slate-100 rounded-xl py-2 pl-8 pr-3 text-[10px] font-bold outline-none focus:ring-1"
+                                        />
+                                        <ImageIcon className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-slate-400" />
+                                    </div>
+                                    <button
+                                        onClick={async () => {
+                                            if (!branding?.id || !newOffer.title) return;
+                                            setIsAddingOffer(true);
+                                            await saveSpecialOffer(branding.id, newOffer);
+                                            setNewOffer({ title: "", description: "", image_url: "", is_active: true });
+                                            setIsAddingOffer(false);
+                                        }}
+                                        disabled={isAddingOffer || !newOffer.title}
+                                        className="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black hover:bg-slate-800 disabled:opacity-50 transition-all"
+                                    >
+                                        {isAddingOffer ? "ADDING..." : "ADD OFFER"}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>

@@ -5,10 +5,10 @@ export type RequestStatus = "Pending" | "Assigned" | "In Progress" | "Completed"
 
 export function StatusBadge({ status }: { status: RequestStatus }) {
     const statusConfig = {
-        Pending: { color: "bg-amber-50 text-amber-700 border-amber-100", icon: <Clock className="w-3.5 h-3.5 mr-1.5" /> },
-        Assigned: { color: "bg-slate-50 text-slate-700 border-slate-100", icon: <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> },
-        "In Progress": { color: "bg-blue-50 text-blue-700 border-blue-100", icon: <PlayCircle className="w-3.5 h-3.5 mr-1.5" /> },
-        Completed: { color: "bg-emerald-50 text-emerald-700 border-emerald-100", icon: <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" /> },
+        Pending: { color: "bg-amber-500/10 text-amber-500 border-amber-500/10", icon: <Clock className="w-3.5 h-3.5 mr-1.5" /> },
+        Assigned: { color: "bg-white/5 text-foreground/70 border-white/10", icon: <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> },
+        "In Progress": { color: "bg-blue-500/10 text-blue-500 border-blue-500/10", icon: <PlayCircle className="w-3.5 h-3.5 mr-1.5" /> },
+        Completed: { color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/10", icon: <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" /> },
     };
 
     const config = statusConfig[status];

@@ -11,6 +11,24 @@ CREATE TABLE IF NOT EXISTS hotels (
     accent_color TEXT DEFAULT '#4f46e5',
     wifi_name TEXT,
     wifi_password TEXT,
+    reception_phone TEXT,
+    breakfast_start TEXT DEFAULT '07:00',
+    breakfast_end TEXT DEFAULT '10:30',
+    lunch_start TEXT DEFAULT '12:30',
+    lunch_end TEXT DEFAULT '15:30',
+    dinner_start TEXT DEFAULT '19:00',
+    dinner_end TEXT DEFAULT '22:30',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 1b. Special Offers (Promotional Content)
+CREATE TABLE IF NOT EXISTS special_offers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    hotel_id UUID REFERENCES hotels(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -110,6 +128,23 @@ CREATE POLICY "Staff can manage requests" ON requests
         )
     );
 
+-- 5. Special Offers Policies
+ALTER TABLE special_offers ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Special offers are viewable by everyone" ON special_offers;
+CREATE POLICY "Special offers are viewable by everyone" ON special_offers
+    FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Staff can manage special offers" ON special_offers;
+CREATE POLICY "Staff can manage special offers" ON special_offers
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM profiles 
+            WHERE profiles.user_id = auth.uid() 
+            AND profiles.hotel_id = special_offers.hotel_id
+        )
+    );
+
 -- Enable Real-time safely
 DO $$
 BEGIN
@@ -147,5 +182,13 @@ BEGIN
         AND tablename = 'profiles'
     ) THEN
         ALTER PUBLICATION supabase_realtime ADD TABLE profiles;
+    END IF;
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_tables 
+        WHERE pubname = 'supabase_realtime' 
+        AND schemaname = 'public' 
+        AND tablename = 'special_offers'
+    ) THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE special_offers;
     END IF;
 END $$;

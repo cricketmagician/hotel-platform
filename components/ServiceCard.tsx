@@ -69,18 +69,18 @@ export function ServiceCard({ icon, title, description, onClick, delay = 0, feat
                 ease: [0.23, 1, 0.32, 1]
             }}
             onClick={onClick}
-            className="group flex flex-col items-center justify-center p-6 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all duration-300 border border-slate-50 text-center w-full aspect-square relative overflow-hidden"
+            className="group flex flex-col items-center justify-center p-6 glass-dark rounded-[2.5rem] shadow-2xl shadow-black/10 hover:shadow-black/20 transition-all duration-300 border border-white/5 text-center w-full aspect-square relative overflow-hidden"
         >
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-            <div className="text-slate-800 mb-4 text-3xl transform group-hover:scale-110 transition-transform duration-500 relative z-10 opacity-70 group-hover:opacity-100">
+            <div className="text-white mb-4 text-3xl transform group-hover:scale-110 transition-transform duration-500 relative z-10 opacity-70 group-hover:opacity-100">
                 {icon}
             </div>
 
-            <h3 className="font-bold text-slate-900 text-sm tracking-tight relative z-10">{title}</h3>
+            <h3 className="font-bold text-white text-sm tracking-tight relative z-10">{title}</h3>
 
             {description && (
-                <p className="text-[9px] text-slate-400 mt-2 font-black uppercase tracking-[0.15em] relative z-10">
+                <p className="text-[9px] text-white/40 mt-2 font-black uppercase tracking-[0.15em] relative z-10">
                     {description}
                 </p>
             )}

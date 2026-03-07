@@ -13,7 +13,23 @@ export interface HotelBranding {
     accentColor: string;
     wifiName?: string;
     wifiPassword?: string;
+    receptionPhone?: string;
     bgPattern?: string;
+    breakfastStart?: string;
+    breakfastEnd?: string;
+    lunchStart?: string;
+    lunchEnd?: string;
+    dinnerStart?: string;
+    dinnerEnd?: string;
+}
+
+export interface SpecialOffer {
+    id: string;
+    hotel_id: string;
+    title: string;
+    description: string;
+    image_url: string;
+    is_active: boolean;
 }
 
 export interface UserProfile {
@@ -196,6 +212,13 @@ export function useHotelBranding(slug: string | undefined) {
                     accentColor: data.accent_color,
                     wifiName: data.wifi_name,
                     wifiPassword: data.wifi_password,
+                    receptionPhone: data.reception_phone,
+                    breakfastStart: data.breakfast_start,
+                    breakfastEnd: data.breakfast_end,
+                    lunchStart: data.lunch_start,
+                    lunchEnd: data.lunch_end,
+                    dinnerStart: data.dinner_start,
+                    dinnerEnd: data.dinner_end,
                 });
             } else {
                 // Mock branding fallback
@@ -219,7 +242,9 @@ export function useHotelBranding(slug: string | undefined) {
                         slug: slug,
                         name: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '),
                         primaryColor: '#2563eb',
-                        accentColor: '#3b82f6'
+                        accentColor: '#3b82f6',
+                        logoImage: '/images/luxury/logo.png',
+                        receptionPhone: '+91 99999 99999'
                     });
                 }
             }
@@ -248,6 +273,13 @@ export function useHotelBranding(slug: string | undefined) {
                     accentColor: data.accent_color,
                     wifiName: data.wifi_name,
                     wifiPassword: data.wifi_password,
+                    receptionPhone: data.reception_phone,
+                    breakfastStart: data.breakfast_start,
+                    breakfastEnd: data.breakfast_end,
+                    lunchStart: data.lunch_start,
+                    lunchEnd: data.lunch_end,
+                    dinnerStart: data.dinner_start,
+                    dinnerEnd: data.dinner_end,
                 });
             })
             .subscribe();
@@ -427,6 +459,13 @@ export async function saveHotelBranding(id: string, updates: Partial<HotelBrandi
             accent_color: updates.accentColor,
             wifi_name: updates.wifiName,
             wifi_password: updates.wifiPassword,
+            reception_phone: updates.receptionPhone,
+            breakfast_start: updates.breakfastStart,
+            breakfast_end: updates.breakfastEnd,
+            lunch_start: updates.lunchStart,
+            lunch_end: updates.lunchEnd,
+            dinner_start: updates.dinnerStart,
+            dinner_end: updates.dinnerEnd,
         })
         .eq('id', id);
 
@@ -642,9 +681,96 @@ export async function verifyBookingPin(hotelId: string, roomNumber: string, pin:
         .eq('booking_pin', pin)
         .single();
 
-    if (error || !data) {
+    if (error) {
         return { success: false, data: null };
     }
     return { success: true, data };
+}
+
+/**
+ * Hook to fetch and subscribe to special offers for a specific hotel
+ */
+export function useSpecialOffers(hotelId?: string) {
+    const [offers, setOffers] = useState<SpecialOffer[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!hotelId) {
+            setLoading(false);
+            return;
+        }
+
+        const fetchOffers = async () => {
+            if (isDemoMode()) {
+                setOffers([
+                    { id: '1', hotel_id: hotelId, title: '20% Off Spa', description: 'Enjoy our premium spa services at a discount.', image_url: 'https://images.unsplash.com/photo-1544161515-4ae6ce6db87e?auto=format&fit=crop&q=80', is_active: true },
+                    { id: '2', hotel_id: hotelId, title: 'Dinner Buffet', description: 'Complementary dinner buffet for all diamond members.', image_url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80', is_active: true }
+                ]);
+                setLoading(false);
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('special_offers')
+                .select('*')
+                .eq('hotel_id', hotelId)
+                .order('created_at', { ascending: false });
+
+            if (data) setOffers(data);
+            setLoading(false);
+        };
+
+        fetchOffers();
+
+        // Subscribe to changes
+        const subscription = supabase
+            .channel(`special_offers_${hotelId}`)
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'public',
+                table: 'special_offers',
+                filter: `hotel_id=eq.${hotelId}`
+            }, () => {
+                fetchOffers();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(subscription);
+        };
+    }, [hotelId]);
+
+    return { offers, loading };
+}
+
+/**
+ * Save or add a special offer
+ */
+export async function saveSpecialOffer(hotelId: string, offer: Partial<SpecialOffer>) {
+    if (isDemoMode()) return { data: null, error: null };
+
+    if (offer.id) {
+        return await supabase
+            .from('special_offers')
+            .update({
+                title: offer.title,
+                description: offer.description,
+                image_url: offer.image_url,
+                is_active: offer.is_active
+            })
+            .eq('id', offer.id);
+    } else {
+        return await supabase
+            .from('special_offers')
+            .insert([{ ...offer, hotel_id: hotelId }]);
+    }
+}
+
+/**
+ * Delete a special offer
+ */
+export async function deleteSpecialOffer(id: string) {
+    if (isDemoMode()) return { data: null, error: null };
+    return await supabase.from('special_offers').delete().eq('id', id);
 }
 

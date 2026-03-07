@@ -53,20 +53,20 @@ export default function StatusPage() {
     const pastRequests = requests.filter((r) => r.status === "Completed");
 
     return (
-        <div className="pb-40 section-padding pt-10">
+        <div className="pb-40 section-padding pt-10 min-h-screen bg-background text-foreground">
             <div className="flex items-center justify-between mb-10">
-                <button onClick={() => router.back()} className="w-10 h-10 rounded-full glass flex items-center justify-center shadow-sm active:scale-90 transition-transform">
-                    <ArrowLeft className="w-5 h-5 text-slate-800" />
+                <button onClick={() => router.back()} className="w-10 h-10 rounded-full glass flex items-center justify-center shadow-sm active:scale-90 transition-transform border border-white/5">
+                    <ArrowLeft className="w-5 h-5 text-foreground" />
                 </button>
-                <h1 className="text-2xl font-serif text-slate-900">Live Status</h1>
+                <h1 className="text-2xl font-serif text-foreground">Live Status</h1>
                 <div className="w-10"></div>
             </div>
 
             <div className="mb-14">
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">Active Requests</h2>
+                    <h2 className="text-[10px] font-black text-foreground/40 uppercase tracking-[0.25em]">Active Requests</h2>
                     {activeRequests.length > 0 && (
-                        <span className="flex items-center text-[9px] font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-xl uppercase tracking-wider border border-amber-100">
+                        <span className="flex items-center text-[9px] font-black text-amber-500 bg-amber-500/10 px-3 py-1 rounded-xl uppercase tracking-wider border border-amber-500/10">
                             <RefreshCcw className="w-3 h-3 mr-1.5 animate-spin" /> Concierge Monitoring
                         </span>
                     )}
@@ -80,7 +80,7 @@ export default function StatusPage() {
                                 layout
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="bg-white p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-slate-50 relative overflow-hidden group"
+                                className="glass-dark p-8 rounded-[2.5rem] shadow-2xl shadow-black/10 border border-white/5 relative overflow-hidden group"
                             >
                                 {/* Luxury Progress Indicator */}
                                 {req.status === "Pending" && (
@@ -104,8 +104,8 @@ export default function StatusPage() {
 
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1 pr-6">
-                                        <h3 className="font-serif text-xl text-slate-900 mb-2">{req.type}</h3>
-                                        <div className="flex items-center text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">
+                                        <h3 className="font-serif text-xl text-white mb-2">{req.type}</h3>
+                                        <div className="flex items-center text-[10px] text-white/40 font-black uppercase tracking-[0.2em]">
                                             <Clock className="w-3 h-3 mr-1.5" />
                                             {req.time} <span className="mx-2 opacity-20">•</span> Room {req.room}
                                         </div>
@@ -113,8 +113,8 @@ export default function StatusPage() {
                                     <StatusBadge status={req.status as any} />
                                 </div>
                                 {req.notes && (
-                                    <div className="mt-6 pt-6 border-t border-slate-50">
-                                        <p className="text-sm text-slate-500 font-medium italic opacity-70 leading-relaxed">
+                                    <div className="mt-6 pt-6 border-t border-white/5">
+                                        <p className="text-sm text-white/60 font-medium italic opacity-70 leading-relaxed">
                                             "{req.notes}"
                                         </p>
                                     </div>
@@ -126,30 +126,30 @@ export default function StatusPage() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="glass border-2 border-dashed border-slate-100 rounded-[3rem] py-24 text-center"
+                        className="glass border-2 border-dashed border-white/5 rounded-[3rem] py-24 text-center"
                     >
-                        <Sparkles className="w-12 h-12 text-slate-200 mx-auto mb-6 opacity-50" />
-                        <p className="text-slate-400 font-serif text-lg">No active signals at the moment.</p>
-                        <p className="text-slate-300 text-[10px] font-black uppercase tracking-widest mt-2">All requests fulfilled</p>
+                        <Sparkles className="w-12 h-12 text-foreground/10 mx-auto mb-6 opacity-50" />
+                        <p className="text-foreground/40 font-serif text-lg">No active signals at the moment.</p>
+                        <p className="text-foreground/20 text-[10px] font-black uppercase tracking-widest mt-2">All requests fulfilled</p>
                     </motion.div>
                 )}
             </div>
 
             <div>
-                <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em] mb-8">Arrival & Fulfilment</h2>
+                <h2 className="text-[10px] font-black text-foreground/40 uppercase tracking-[0.25em] mb-8">Arrival & Fulfilment</h2>
                 <div className="space-y-4">
                     {pastRequests.map((req) => (
-                        <div key={req.id} className="bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100 flex items-center justify-between opacity-60 group hover:opacity-100 transition-all duration-500">
+                        <div key={req.id} className="bg-white/5 p-6 rounded-[2rem] border border-white/5 flex items-center justify-between opacity-60 group hover:opacity-100 transition-all duration-500">
                             <div className="flex items-center">
-                                <div className="w-12 h-12 rounded-2xl glass text-emerald-600 flex items-center justify-center mr-5 shadow-sm">
+                                <div className="w-12 h-12 rounded-2xl glass text-emerald-500 flex items-center justify-center mr-5 shadow-sm">
                                     <CheckCircle2 className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="font-serif text-lg text-slate-900">{req.type}</h3>
-                                    <p className="text-[9px] text-slate-400 font-black uppercase tracking-[0.15em] mt-1">{req.time}</p>
+                                    <h3 className="font-serif text-lg text-foreground">{req.type}</h3>
+                                    <p className="text-[9px] text-foreground/40 font-black uppercase tracking-[0.15em] mt-1">{req.time}</p>
                                 </div>
                             </div>
-                            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Completed</span>
+                            <span className="text-[9px] font-black text-foreground/20 uppercase tracking-widest">Completed</span>
                         </div>
                     ))}
                 </div>
