@@ -28,42 +28,50 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
     const [isVerifying, setIsVerifying] = useState(false);
 
     useEffect(() => {
-        // Try to load from localStorage first
-        const storedRoom = localStorage.getItem(`hotel_room_${hotelSlug}`);
-        const storedPin = localStorage.getItem(`hotel_pin_${hotelSlug}`);
+        if (!branding?.id || brandingLoading) return;
 
         const urlRoom = searchParams?.get("room");
         const urlPin = searchParams?.get("pin");
+        const storedRoom = localStorage.getItem(`hotel_room_${hotelSlug}`);
+        const storedPin = localStorage.getItem(`hotel_pin_${hotelSlug}`);
 
-        if (urlRoom && !storedRoom) {
-            setRoomNumber(urlRoom);
-        } else if (storedRoom) {
-            setRoomNumber(storedRoom);
+        // 1. Determine which room we are dealing with. URL always wins.
+        const effectiveRoom = urlRoom || storedRoom;
+
+        // 2. If room changed (URL room != stored room), we must re-verify PIN
+        // unless the URL itself contains a valid PIN (re-enabled for scanning ease)
+        let effectivePin = storedPin;
+        if (urlRoom && urlRoom !== storedRoom) {
+            effectivePin = urlPin || ""; // Reset PIN if room changed and no new PIN in URL
+        } else if (!urlRoom && storedRoom) {
+            effectivePin = storedPin;
         }
 
-        const effectiveRoom = urlRoom || storedRoom;
-        const effectivePin = urlPin || storedPin;
+        if (effectiveRoom) {
+            setRoomNumber(effectiveRoom);
 
-        if (effectiveRoom && effectivePin && branding?.id) {
-            // Validate session (either stored or from URL)
-            setIsVerifying(true);
-            verifyBookingPin(branding.id, effectiveRoom, effectivePin).then(res => {
-                if (res.success) {
-                    setIsVerified(true);
-                    // Persistent storage for future visits
-                    localStorage.setItem(`hotel_room_${hotelSlug}`, effectiveRoom);
-                    localStorage.setItem(`hotel_pin_${hotelSlug}`, effectivePin);
-                } else {
-                    // Stored session invalid, check out or changed PIN
-                    if (storedRoom && storedPin) {
-                        localStorage.removeItem(`hotel_room_${hotelSlug}`);
-                        localStorage.removeItem(`hotel_pin_${hotelSlug}`);
+            if (effectivePin) {
+                setPin(effectivePin);
+                setIsVerifying(true);
+                verifyBookingPin(branding.id, effectiveRoom, effectivePin).then(res => {
+                    if (res.success) {
+                        setIsVerified(true);
+                        localStorage.setItem(`hotel_room_${hotelSlug}`, effectiveRoom);
+                        localStorage.setItem(`hotel_pin_${hotelSlug}`, effectivePin);
+                    } else {
+                        // Cleanup if stored session is invalid
+                        if (effectiveRoom === storedRoom) {
+                            localStorage.removeItem(`hotel_room_${hotelSlug}`);
+                            localStorage.removeItem(`hotel_pin_${hotelSlug}`);
+                        }
+                        setIsVerified(false);
                     }
-                    setIsVerified(false);
-                }
-                setIsVerifying(false);
-            });
-        } else if (!brandingLoading) {
+                    setIsVerifying(false);
+                });
+            } else {
+                setIsVerified(false);
+            }
+        } else {
             setIsVerified(false);
         }
     }, [branding?.id, hotelSlug, searchParams, brandingLoading]);
