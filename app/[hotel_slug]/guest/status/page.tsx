@@ -103,7 +103,7 @@ export default function StatusPage() {
                 <button onClick={() => router.back()} className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-lg border border-slate-100 active:scale-90 transition-transform">
                     <ArrowLeft className="w-6 h-6 text-slate-900" />
                 </button>
-                <h1 className="text-2xl font-black uppercase tracking-tighter italic">Order <span className="text-[#E31837]">Status</span></h1>
+                <h1 className="text-2xl font-serif text-slate-900">Order Status</h1>
                 <div className="w-12"></div>
             </div>
 
@@ -146,7 +146,7 @@ export default function StatusPage() {
                                         <div className="flex-1 pr-6">
                                             <div className="flex items-center mb-1">
                                                 <div className={`w-2 h-2 rounded-full ${theme.accent} mr-2`} />
-                                                <h3 className={`font-black text-2xl ${theme.text} uppercase tracking-tighter italic`}>{req.type}</h3>
+                                                <h3 className={`font-serif text-2xl ${theme.text}`}>{req.type}</h3>
                                             </div>
                                             <div className="flex items-center text-[11px] text-slate-400 font-bold uppercase tracking-tight">
                                                 <Clock className="w-3.5 h-3.5 mr-1.5 opacity-50" />
@@ -157,11 +157,9 @@ export default function StatusPage() {
                                     </div>
 
                                     {req.notes && (
-                                        <div className="mt-8 pt-6 border-t border-slate-200/50">
-                                            <p className={`text-[13px] ${theme.text} font-bold opacity-60 leading-relaxed uppercase tracking-tighter`}>
-                                                &ldquo;{req.notes}&rdquo;
-                                            </p>
-                                        </div>
+                                        <p className={`text-[13px] ${theme.text} font-medium opacity-60 leading-relaxed italic`}>
+                                            &ldquo;{req.notes}&rdquo;
+                                        </p>
                                     )}
 
                                     {/* Abstract Decorative Element */}
@@ -176,8 +174,8 @@ export default function StatusPage() {
                         animate={{ opacity: 1 }}
                         className="bg-white border-2 border-dashed border-slate-100 rounded-[3.5rem] py-32 text-center shadow-inner"
                     >
-                        < Sparkles className="w-16 h-16 text-slate-200 mx-auto mb-6" />
-                        <p className="text-slate-900 font-black text-xl uppercase italic tracking-tighter">Everything Is Perfect</p>
+                        <Sparkles className="w-16 h-16 text-slate-200 mx-auto mb-6" />
+                        <p className="text-slate-900 font-serif text-xl">Everything Is Perfect</p>
                         <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-2">No active requests found</p>
                     </motion.div>
                 )}
@@ -193,7 +191,7 @@ export default function StatusPage() {
                                     <CheckCircle2 className="w-7 h-7" />
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-lg text-slate-900 uppercase tracking-tighter italic leading-none">{req.type}</h3>
+                                    <h3 className="font-serif text-lg text-slate-900">{req.type}</h3>
                                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-1">{req.time}</p>
                                 </div>
                             </div>

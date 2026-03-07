@@ -125,7 +125,7 @@ export default function GuestDashboard() {
                     <div className="flex flex-col">
                         <motion.h1
                             animate={{ fontSize: scrolled ? "14px" : "16px" }}
-                            className="font-black text-slate-900 leading-none tracking-tight whitespace-nowrap"
+                            className="font-serif text-slate-900 leading-none tracking-tight whitespace-nowrap"
                         >
                             {branding?.name || "Premium Hotel"}
                             {scrolled && <span className="text-slate-300 mx-2 font-normal">•</span>}
@@ -186,8 +186,8 @@ export default function GuestDashboard() {
 
                     {/* Room Number Hero */}
                     <div className="mb-12">
-                        <h2 className="text-[44px] font-black text-slate-900 tracking-tighter leading-none">
-                            Room <span className="text-amber-600 italic">#{roomNumber || "---"}</span>
+                        <h2 className="text-[44px] font-serif text-slate-900 tracking-tighter leading-none">
+                            Room <span className="text-amber-600 font-bold">#{roomNumber || "---"}</span>
                         </h2>
                     </div>
 
@@ -195,7 +195,7 @@ export default function GuestDashboard() {
                     <div className="mb-8 flex items-end justify-between">
                         <div>
                             <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Check-out</p>
-                            <p className="text-2xl font-black text-slate-900 tracking-tight italic">24 Jun, 2026</p>
+                            <p className="text-2xl font-serif text-slate-900 tracking-tight">24 Jun, 2026</p>
                         </div>
                         <div className="text-right">
                             <div className="px-5 py-2.5 bg-amber-50 rounded-2xl border border-amber-100 shadow-sm flex flex-col items-center">
@@ -226,7 +226,7 @@ export default function GuestDashboard() {
             {(offers.length > 0 || loadingOffers) && (
                 <motion.section variants={item} className="mb-10">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40">Exclusive Privileges</h2>
+                        <h2 className="text-xl font-serif text-slate-900">Exclusive Privileges</h2>
                         <div className="flex space-x-2">
                             <button
                                 onClick={() => setCurrentOfferIndex((prev: number) => (prev === 0 ? offers.length - 1 : prev - 1))}
@@ -327,7 +327,7 @@ export default function GuestDashboard() {
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center">
                             <Zap className="w-4 h-4 text-amber-500 mr-2" />
-                            <h2 className="text-xl font-black italic uppercase tracking-tighter text-slate-900">Quick Requests</h2>
+                            <h2 className="text-xl font-serif text-slate-900">Quick Requests</h2>
                         </div>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-300">Fast Response</span>
                     </div>
@@ -361,8 +361,8 @@ export default function GuestDashboard() {
                                 <div className="relative z-10 w-full">
                                     <div className="flex items-center justify-between w-full">
                                         <div>
-                                            <p className="text-sm font-black text-white uppercase tracking-tighter italic leading-tight group-hover:translate-x-1 transition-transform duration-300">{req.label}</p>
-                                            <p className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-widest group-hover:translate-x-1 transition-transform duration-500">{req.notes}</p>
+                                            <p className="text-lg font-serif text-white leading-tight group-hover:translate-x-1 transition-transform duration-300">{req.label}</p>
+                                            <p className="text-[9px] font-black text-slate-400 mt-1 uppercase tracking-widest group-hover:translate-x-1 transition-transform duration-500">{req.notes}</p>
                                         </div>
                                         {submittingType === req.type && (
                                             <div className="w-5 h-5 border-2 border-white/20 border-t-amber-500 rounded-full animate-spin"></div>
