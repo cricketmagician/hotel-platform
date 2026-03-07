@@ -104,7 +104,7 @@ export default function RoomsPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                     {roomsList.map((room) => {
-                        const qrUrl = `${appUrl}/${hotelSlug}/guest/dashboard?room=${room.room_number}${room.is_occupied && room.booking_pin ? `&pin=${room.booking_pin}` : ""}`;
+                        const qrUrl = `${appUrl}/${hotelSlug}/guest/dashboard?room=${room.room_number}`;
                         return (
                             <div key={room.id} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center relative group hover:shadow-xl hover:shadow-slate-200/50 transition-all">
                                 {room.is_occupied ? (
