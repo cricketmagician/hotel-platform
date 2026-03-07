@@ -31,6 +31,7 @@ export default function GuestDashboard() {
     const { roomNumber } = useGuestRoom();
 
     const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
+    const [scrolled, setScrolled] = useState(false);
 
     const [submittingType, setSubmittingType] = React.useState<string | null>(null);
     const [toast, setToast] = React.useState<{ message: string; type: "success" | "error"; isVisible: boolean }>({
@@ -38,6 +39,14 @@ export default function GuestDashboard() {
         type: "success",
         isVisible: false
     });
+
+    React.useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const activeRequests = requests.filter(r => r.status === "Pending" || r.status === "In Progress");
 
@@ -93,75 +102,122 @@ export default function GuestDashboard() {
 
     return (
         <div className="pb-40 px-5 pt-6 min-h-screen bg-background max-w-[520px] mx-auto overflow-x-hidden">
-            {/* 1. Branded Header Section (Light Luxury Glass) */}
+            {/* 1. Branded Header Section (Scroll Shrinking) */}
             <motion.header
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-md z-50"
+                animate={{
+                    width: scrolled ? "calc(100% - 40px)" : "calc(100% - 32px)",
+                    top: scrolled ? 12 : 20,
+                    padding: scrolled ? "12px 24px" : "16px 20px"
+                }}
+                className="fixed left-1/2 -translate-x-1/2 max-w-[480px] z-50 bg-white/90 backdrop-blur-2xl rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] flex items-center justify-between transition-all duration-300"
             >
-                <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] p-3 px-6 border border-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
-                    <div className="flex items-center">
-                        <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center mr-3 border border-slate-200/50 shadow-sm overflow-hidden p-1">
-                            {branding?.logoImage ? (
-                                <img src={branding.logoImage} alt={branding.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <span className="text-sm font-serif text-slate-900">{branding?.name?.charAt(0)}</span>
+                <div className="flex items-center overflow-hidden">
+                    <motion.div
+                        animate={{ scale: scrolled ? 0.8 : 1 }}
+                        className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mr-3 border border-slate-100 shrink-0 overflow-hidden"
+                    >
+                        {branding?.logoImage ? (
+                            <img src={branding.logoImage} alt={branding.name} className="w-full h-full object-cover" />
+                        ) : (
+                            <span className="text-sm font-black text-slate-900">{branding?.name?.charAt(0)}</span>
+                        )}
+                    </motion.div>
+                    <div className="flex flex-col">
+                        <motion.h1
+                            animate={{ fontSize: scrolled ? "14px" : "16px" }}
+                            className="font-black text-slate-900 leading-none tracking-tight whitespace-nowrap"
+                        >
+                            {branding?.name || "Premium Hotel"}
+                            {scrolled && <span className="text-slate-300 mx-2 font-normal">•</span>}
+                            {scrolled && <span className="text-amber-600">Room {roomNumber || "---"}</span>}
+                        </motion.h1>
+                        <AnimatePresence>
+                            {!scrolled && (
+                                <motion.p
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mt-1"
+                                >
+                                    Concierge Active
+                                </motion.p>
                             )}
-                        </div>
-                        <div>
-                            <h1 className="text-sm font-serif text-slate-900 leading-tight">{branding?.name || "The Grand Palace"}</h1>
-                            <h2 className="text-[8px] font-black uppercase tracking-[0.2em] text-amber-600/60 leading-tight mt-0.5">Concierge Active</h2>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-full flex items-center">
-                            <div className="w-1 h-1 rounded-full bg-emerald-500 mr-2 animate-pulse"></div>
-                            <span className="text-[7px] font-black uppercase tracking-[0.2em] text-emerald-600">Secure Access</span>
-                        </div>
+                        </AnimatePresence>
                     </div>
                 </div>
+
+                <motion.div
+                    animate={{ scale: scrolled ? 0.9 : 1 }}
+                    className="px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full flex items-center shadow-sm"
+                >
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></div>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Secure Access</span>
+                </motion.div>
             </motion.header>
 
-            {/* Spacer for fixed header - perfectly optimized for screen flow */}
-            <div className="h-[73px]"></div>
+            {/* Spacer for fixed header */}
+            <div className="h-[90px]"></div>
 
+            {/* 2. Hero Section (Upgraded Room Card) */}
             <motion.div
-                whileHover={{ y: -5, scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="relative group cursor-pointer z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5 }}
+                className="relative cursor-pointer z-10"
             >
-                <div className="relative bg-white rounded-[2.5rem] p-8 border border-white/50 shadow-[0_15px_45px_-12px_rgba(0,0,0,0.08)] flex flex-col overflow-hidden">
-                    {/* Inner 3D Glow / Depth Layer */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-slate-50/20"></div>
-
-                    {/* Header Row: Flex between Title and Check-out */}
-                    <div className="relative z-10 flex items-start justify-between mb-8">
+                <div className="relative bg-gradient-to-br from-white to-[#F7F5F2] rounded-[3rem] p-8 pb-10 shadow-[0_8px_25px_rgba(0,0,0,0.05)] border border-white flex flex-col overflow-hidden">
+                    {/* Top Detail Row */}
+                    <div className="flex items-center justify-between mb-8">
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-[0.25em] text-amber-600/50 mb-3">Authenticated Room</p>
-                            <h3 className="text-4xl font-serif text-slate-900 tracking-tight flex items-baseline">
-                                Room <span className="ml-3 text-amber-600 font-bold drop-shadow-sm">{roomNumber || "101"}</span>
-                            </h3>
+                            <p className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-400">Authenticated Room</p>
                         </div>
+                        <div className="flex items-center space-x-3 text-slate-400">
+                            <div className="flex items-center">
+                                <User className="w-3 h-3 mr-1" />
+                                <span className="text-[10px] font-bold">2 Guests</span>
+                            </div>
+                            <div className="w-[1px] h-3 bg-slate-200"></div>
+                            <div className="flex items-center">
+                                <Wifi className="w-3 h-3 mr-1 text-emerald-500" />
+                                <span className="text-[10px] font-bold">Connected</span>
+                            </div>
+                        </div>
+                    </div>
 
+                    {/* Room Number Hero */}
+                    <div className="mb-12">
+                        <h2 className="text-[44px] font-black text-slate-900 tracking-tighter leading-none">
+                            Room <span className="text-amber-600 italic">#{roomNumber || "---"}</span>
+                        </h2>
+                    </div>
+
+                    {/* Check-out Details */}
+                    <div className="mb-8 flex items-end justify-between">
+                        <div>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Check-out</p>
+                            <p className="text-2xl font-black text-slate-900 tracking-tight italic">24 Jun, 2026</p>
+                        </div>
                         <div className="text-right">
-                            <p className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 mb-3">Check-out</p>
-                            <div className="flex flex-col items-end">
-                                <p className="text-xl font-serif text-slate-900 leading-none">24 Jun</p>
-                                <p className="text-[9px] font-bold text-amber-600/60 uppercase tracking-widest mt-2 whitespace-nowrap">11:00 AM Sharp</p>
+                            <div className="px-5 py-2.5 bg-amber-50 rounded-2xl border border-amber-100 shadow-sm flex flex-col items-center">
+                                <p className="text-[14px] font-black text-amber-600 uppercase tracking-tighter leading-none">11:00 AM</p>
+                                <p className="text-[8px] font-bold text-amber-600/40 uppercase tracking-widest mt-1">Sharp</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Decorative Divider */}
-                    <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-slate-200/40 to-transparent relative z-10 mb-8"></div>
+                    <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-slate-200/50 to-transparent mb-6"></div>
 
-                    {/* Sanctuary Entrance Detail / Small Footer */}
-                    <div className="relative z-10 flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                            <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Live Concierge Active</span>
+                    {/* Status Indicators at Bottom */}
+                    <div className="flex items-center space-x-6">
+                        <div className="flex items-center">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2.5 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Concierge Online</span>
                         </div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-300">Secure Sanctuary</span>
+                        <div className="flex items-center">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2.5 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Secure Access</span>
+                        </div>
                     </div>
                 </div>
             </motion.div>
