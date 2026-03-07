@@ -270,7 +270,7 @@ export default function GuestDashboard() {
                 <motion.section variants={item}>
                     <div className="grid grid-cols-4 gap-6">
                         {[
-                            { label: "Laundry", icon: <Shirt />, bg: "bg-slate-900/5 text-slate-900", action: () => { } },
+                            { label: "Laundry", icon: <Shirt />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/services?type=laundry`) } },
                             { label: "Wi-Fi", icon: <Wifi />, bg: "bg-amber-600/10 text-amber-700", action: () => { router.push(`/${hotelSlug}/guest/wifi`) } },
                             { label: "Dining", icon: <Utensils />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/restaurant`) } },
                             {
@@ -279,9 +279,11 @@ export default function GuestDashboard() {
                                 bg: "bg-amber-600/10 text-amber-700",
                                 action: () => {
                                     if (branding?.receptionPhone) {
+                                        window.location.href = `tel:${branding.receptionPhone}`;
+                                    } else {
                                         setToast({
-                                            message: `Call Reception: Dial ${branding.receptionPhone} from your room landline`,
-                                            type: "success",
+                                            message: "Reception phone not configured. Please visit front desk.",
+                                            type: "error",
                                             isVisible: true
                                         });
                                         setTimeout(() => setToast(prev => ({ ...prev, isVisible: false })), 5000);
