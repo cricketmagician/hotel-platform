@@ -9,9 +9,44 @@ interface ServiceCardProps {
     description: string;
     onClick?: () => void;
     delay?: number;
+    featured?: boolean;
 }
 
-export function ServiceCard({ icon, title, description, onClick, delay = 0 }: ServiceCardProps) {
+export function ServiceCard({ icon, title, description, onClick, delay = 0, featured = false }: ServiceCardProps) {
+    if (featured) {
+        return (
+            <motion.button
+                whileHover={{ y: -5, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                    delay: delay,
+                    duration: 0.6,
+                    ease: [0.23, 1, 0.32, 1]
+                }}
+                onClick={onClick}
+                className="group relative w-full h-48 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-black/5 border border-white/20"
+            >
+                {/* Background Gradient/Image Placeholder */}
+                <div className="absolute inset-0 bg-slate-900 group-hover:scale-105 transition-transform duration-700">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                </div>
+
+                <div className="absolute inset-0 p-8 flex flex-col justify-end text-left">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="p-3 glass rounded-2xl text-white">
+                            {icon}
+                        </div>
+                        <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[9px] font-black text-white uppercase tracking-[0.2em]">Recommended</span>
+                    </div>
+                    <h3 className="text-2xl font-serif text-white mb-1">{title}</h3>
+                    <p className="text-white/60 text-xs font-medium uppercase tracking-widest">{description}</p>
+                </div>
+            </motion.button>
+        );
+    }
+
     return (
         <motion.button
             whileHover={{ y: -5, scale: 1.02 }}
@@ -24,19 +59,18 @@ export function ServiceCard({ icon, title, description, onClick, delay = 0 }: Se
                 ease: [0.23, 1, 0.32, 1]
             }}
             onClick={onClick}
-            className="group flex flex-col items-center justify-center p-6 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 border border-slate-100 text-center w-full aspect-square relative overflow-hidden"
+            className="group flex flex-col items-center justify-center p-6 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all duration-300 border border-slate-50 text-center w-full aspect-square relative overflow-hidden"
         >
-            {/* Subtle Gradient Background on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-            <div className="text-blue-600 mb-4 text-4xl transform group-hover:scale-110 transition-transform duration-300 relative z-10">
+            <div className="text-slate-800 mb-4 text-3xl transform group-hover:scale-110 transition-transform duration-500 relative z-10 opacity-70 group-hover:opacity-100">
                 {icon}
             </div>
 
-            <h3 className="font-bold text-slate-800 text-sm tracking-tight relative z-10">{title}</h3>
+            <h3 className="font-bold text-slate-900 text-sm tracking-tight relative z-10">{title}</h3>
 
             {description && (
-                <p className="text-[10px] text-slate-400 mt-2 font-medium uppercase tracking-widest relative z-10">
+                <p className="text-[9px] text-slate-400 mt-2 font-black uppercase tracking-[0.15em] relative z-10">
                     {description}
                 </p>
             )}

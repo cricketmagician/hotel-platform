@@ -78,15 +78,15 @@ export default function RestaurantPage() {
     }
 
     return (
-        <div className="pb-32">
-            <div className="flex items-center justify-between mb-8">
-                <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center shadow-sm active:scale-90 transition-transform">
+        <div className="pb-40 section-padding pt-10">
+            <div className="flex items-center justify-between mb-10">
+                <button onClick={() => router.back()} className="w-10 h-10 rounded-full glass flex items-center justify-center shadow-sm active:scale-90 transition-transform">
                     <ArrowLeft className="w-5 h-5 text-slate-800" />
                 </button>
-                <h1 className="text-xl font-black text-slate-900">{branding?.name || "The Grand Dining"}</h1>
+                <h1 className="text-2xl font-serif text-slate-900">{branding?.name || "The Grand Dining"}</h1>
                 <button
                     onClick={() => setShowCart(!showCart)}
-                    className="relative w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+                    className="relative w-12 h-12 rounded-[1.25rem] bg-slate-900 text-white flex items-center justify-center shadow-2xl active:scale-90 transition-transform"
                     style={{ backgroundColor: branding?.primaryColor }}
                 >
                     <ShoppingCart className="w-5 h-5" />
@@ -94,7 +94,7 @@ export default function RestaurantPage() {
                         <motion.span
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="absolute -top-2 -right-2 bg-amber-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-md"
+                            className="absolute -top-2 -right-2 bg-amber-600 text-white text-[9px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-lg"
                         >
                             {cart.length}
                         </motion.span>
@@ -105,13 +105,12 @@ export default function RestaurantPage() {
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-amber-50 border border-amber-100 p-5 rounded-3xl mb-8 flex items-center"
-                style={{ backgroundColor: `${branding?.accentColor}10`, borderColor: `${branding?.accentColor}20` }}
+                className="glass rounded-[2.5rem] p-6 mb-10 flex items-center border border-white"
             >
-                <div className="w-1.5 h-10 bg-amber-400 rounded-full mr-4" style={{ backgroundColor: branding?.accentColor }}></div>
+                <div className="w-1.5 h-12 bg-amber-600 rounded-full mr-5"></div>
                 <div>
-                    <h4 className="font-bold text-amber-900" style={{ color: branding?.accentColor }}>Exclusive Menu</h4>
-                    <p className="text-amber-800/60 text-xs font-medium uppercase tracking-wider">Gourmet Selection</p>
+                    <h4 className="font-serif text-lg text-slate-900">Gourmet Selection</h4>
+                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Curated for your palate</p>
                 </div>
             </motion.div>
 
@@ -121,7 +120,7 @@ export default function RestaurantPage() {
                         key={item.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                        transition={{ delay: index * 0.08 }}
                     >
                         <MenuCard
                             title={item.title}
@@ -141,21 +140,20 @@ export default function RestaurantPage() {
                         initial={{ y: 100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: 100, opacity: 0 }}
-                        className="fixed bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-50"
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-50 px-2"
                     >
-                        <div className="bg-white rounded-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden">
-                            <div className="p-6 flex items-center justify-between">
+                        <div className="glass-dark rounded-[2.5rem] p-6 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)] border border-white/10">
+                            <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Your Basket</p>
-                                    <p className="text-xl font-black text-slate-800">${cartTotal.toFixed(2)}</p>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-white/40 mb-1">Total Signals</p>
+                                    <p className="text-2xl font-serif text-white">${cartTotal.toFixed(2)}</p>
                                 </div>
                                 <button
                                     onClick={handleOrder}
                                     disabled={isOrdering}
-                                    className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-xl shadow-blue-200 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
-                                    style={{ backgroundColor: branding?.primaryColor }}
+                                    className="bg-white text-slate-900 px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all disabled:opacity-50"
                                 >
-                                    {isOrdering ? "Placing..." : "Checkout"}
+                                    {isOrdering ? "Transmitting..." : "Initialize"}
                                 </button>
                             </div>
                         </div>

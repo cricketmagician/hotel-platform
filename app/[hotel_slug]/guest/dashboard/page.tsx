@@ -5,7 +5,7 @@ import { HotelLogo } from "@/components/HotelLogo";
 import { RoomHeader } from "@/components/RoomHeader";
 import { Wifi, Utensils, Shirt, Sparkles, Phone, Info, Droplets, CheckCircle, Clock } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useHotelBranding, useSupabaseRequests, addSupabaseRequest } from "@/utils/store";
 import { useGuestRoom } from "../GuestAuthWrapper";
 
@@ -24,12 +24,11 @@ export default function GuestDashboard() {
     const { roomNumber } = useGuestRoom();
 
     const services = [
-        { id: "wifi", title: "Wi-Fi", icon: <Wifi />, path: `/${hotelSlug}/guest/wifi`, category: "Connect" },
-        { id: "room-service", title: "Dining", icon: <Utensils />, path: `/${hotelSlug}/guest/restaurant`, category: "Food" },
-        { id: "laundry", title: "Laundry", icon: <Shirt />, path: `/${hotelSlug}/guest/services?type=laundry`, category: "Care" },
-        { id: "housekeeping", title: "Clean", icon: <Sparkles />, path: `/${hotelSlug}/guest/services?type=housekeeping`, category: "Service" },
-        { id: "reception", title: "Concierge", icon: <Phone />, path: `/${hotelSlug}/guest/services?type=reception`, category: "Contact" },
-        { id: "hotel-info", title: "Details", icon: <Info />, path: `/${hotelSlug}/guest/info`, category: "Hotel" },
+        { id: "room-service", title: "Order Cuisine", icon: <Utensils className="w-5 h-5" />, path: `/${hotelSlug}/guest/restaurant`, category: "Dining" },
+        { id: "laundry", title: "Laundry Pickup", icon: <Shirt className="w-5 h-5" />, path: `/${hotelSlug}/guest/services?type=laundry`, category: "Care" },
+        { id: "housekeeping", title: "Room Cleaning", icon: <Sparkles className="w-5 h-5" />, path: `/${hotelSlug}/guest/services?type=housekeeping`, category: "Service" },
+        { id: "reception", title: "Concierge Chat", icon: <Phone className="w-5 h-5" />, path: `/${hotelSlug}/guest/services?type=reception`, category: "Contact" },
+        { id: "hotel-info", title: "Hotel Details", icon: <Info className="w-5 h-5" />, path: `/${hotelSlug}/guest/info`, category: "Hotel" },
     ];
 
     const container = {
@@ -37,7 +36,7 @@ export default function GuestDashboard() {
         show: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.05
+                staggerChildren: 0.08
             }
         }
     };
@@ -61,173 +60,176 @@ export default function GuestDashboard() {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="w-12 h-12 border-4 border-slate-900 border-t-transparent rounded-full animate-spin"></div>
         </div>
     );
 
+    const getTimeGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good Morning";
+        if (hour < 17) return "Good Afternoon";
+        return "Good Evening";
+    };
+
     return (
-        <div className="pb-8 overflow-hidden">
-            <motion.div
+        <div className="pb-32 section-padding pt-10">
+            {/* Premium Header */}
+            <motion.header
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                transition={{ duration: 0.8 }}
+                className="mb-10"
             >
-                <HotelLogo name={branding?.name} />
-                <RoomHeader roomNumber={roomNumber} />
-            </motion.div>
-
-            {/* Express Water / Status Button */}
-            <motion.button
-                onClick={pendingWater ? () => router.push(`/${hotelSlug}/guest/status`) : handleQuickWater}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className={`w-full mb-8 rounded-[2rem] p-6 text-white flex items-center justify-between relative overflow-hidden group shadow-xl transition-colors duration-500 ${pendingWater ? 'bg-green-600 shadow-green-100' : 'bg-blue-600 shadow-blue-100'}`}
-                style={{ backgroundColor: !pendingWater ? branding?.primaryColor : undefined }}
-            >
-                <div className={`absolute inset-0 opacity-20 animate-pulse ${pendingWater ? 'bg-white' : 'bg-blue-400'}`}></div>
-                <div className="relative z-10 flex items-center">
-                    <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mr-4 group-hover:rotate-12 transition-transform">
-                        {pendingWater ? <Clock className="w-6 h-6 text-white" /> : <Droplets className="w-6 h-6 text-white" />}
+                <div className="flex justify-between items-start mb-6">
+                    <div>
+                        <p className="text-slate-400 font-black uppercase tracking-[0.25em] text-[10px] mb-2">Authenticated Room {roomNumber}</p>
+                        <h1 className="text-4xl font-serif text-slate-900 leading-tight">
+                            {getTimeGreeting()},<br /> Guest
+                        </h1>
                     </div>
-                    <div className="text-left">
-                        <h3 className="text-lg font-black leading-tight">
-                            {pendingWater ? "Water on the way" : "Express Water"}
-                        </h3>
-                        <p className="text-[10px] text-white/80 font-bold uppercase tracking-widest opacity-80">
-                            {pendingWater ? "Arriving in approx 2-4 mins" : "One-tap critical service"}
-                        </p>
-                    </div>
+                    {branding?.logoImage ? (
+                        <img src={branding.logoImage} alt={branding.name} className="h-12 w-auto object-contain" />
+                    ) : (
+                        <div className="p-4 glass rounded-[1.5rem] shadow-sm">
+                            <h2 className="text-lg font-serif">{branding?.name?.charAt(0)}</h2>
+                        </div>
+                    )}
                 </div>
-                <div className="relative z-10 flex items-center bg-white/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                    {pendingWater ? "VIEW STATUS" : "ORDER NOW"}
-                </div>
-            </motion.button>
 
-            {/* Active Request Tracker Banner */}
-            {activeRequests.length > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="mb-8 overflow-hidden"
+                {/* Active Request Tracker Banner (Ambient Style) */}
+                <AnimatePresence>
+                    {activeRequests.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            onClick={() => router.push(`/${hotelSlug}/guest/status`)}
+                            className="glass rounded-3xl p-5 mb-8 flex items-center justify-between cursor-pointer border border-slate-100/50"
+                        >
+                            <div className="flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse mr-3"></div>
+                                <p className="text-sm font-bold text-slate-700">{activeRequests.length} active service signals...</p>
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-500">Live Status</span>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.header>
+
+            {/* Express Actions Section */}
+            <div className="mb-12">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-serif text-slate-900">Immediate Request</h2>
+                    <div className="h-[1px] flex-1 bg-slate-100 mx-4"></div>
+                </div>
+
+                <motion.button
+                    onClick={pendingWater ? () => router.push(`/${hotelSlug}/guest/status`) : handleQuickWater}
+                    whileHover={{ y: -4 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full rounded-[2.5rem] p-8 flex items-center justify-between relative overflow-hidden group shadow-2xl transition-all duration-500 ${pendingWater ? 'glass border-blue-100 shadow-blue-50' : 'bg-slate-900 shadow-slate-200'}`}
                 >
-                    <div
-                        onClick={() => router.push(`/${hotelSlug}/guest/status`)}
-                        className="bg-slate-900 rounded-3xl p-5 text-white flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
-                    >
-                        <div className="flex items-center">
-                            <div className="flex -space-x-2 mr-4">
-                                {activeRequests.slice(0, 3).map((r, i) => (
-                                    <div key={r.id} className="w-8 h-8 rounded-full bg-blue-600 border-2 border-slate-900 flex items-center justify-center">
-                                        <Sparkles className="w-3.5 h-3.5" />
+                    {!pendingWater && <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-transparent opacity-50"></div>}
+
+                    <div className="relative z-10 flex items-center">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mr-5 transition-transform duration-500 group-hover:scale-110 ${pendingWater ? 'bg-blue-50 text-blue-600' : 'bg-white/10 text-white backdrop-blur-md border border-white/10'}`}>
+                            {pendingWater ? <Clock className="w-6 h-6" /> : <Droplets className="w-6 h-6" />}
+                        </div>
+                        <div className="text-left">
+                            <h3 className={`text-xl font-serif ${pendingWater ? 'text-slate-900' : 'text-white'}`}>
+                                {pendingWater ? "Water Arriving" : "Need Water?"}
+                            </h3>
+                            <p className={`text-[10px] uppercase tracking-[0.2em] font-black opacity-60 mt-1 ${pendingWater ? 'text-blue-600' : 'text-white'}`}>
+                                {pendingWater ? "Approx 2-4 mins" : "Express Delivery"}
+                            </p>
+                        </div>
+                    </div>
+                    {!pendingWater && (
+                        <div className="relative z-10 bg-white/10 border border-white/20 p-4 rounded-2xl">
+                            <span className="text-[10px] font-black text-white uppercase tracking-widest">Request Now</span>
+                        </div>
+                    )}
+                </motion.button>
+            </div>
+
+            {/* Services Grid Section */}
+            <div>
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-serif text-slate-900">Hotel Services</h2>
+                    <div className="h-[1px] flex-1 bg-slate-100 mx-4"></div>
+                </div>
+
+                <motion.div
+                    variants={container}
+                    initial="hidden"
+                    animate="show"
+                    className="space-y-5"
+                >
+                    {/* Primary Action: Dining */}
+                    <ServiceCard
+                        featured
+                        title="Order Cuisine"
+                        description="Luxury Dining at your door"
+                        icon={<Utensils className="w-6 h-6" />}
+                        onClick={() => router.push(`/${hotelSlug}/guest/restaurant`)}
+                    />
+
+                    {/* Secondary Services Grid */}
+                    <div className="grid grid-cols-2 gap-5">
+                        {services.slice(1).map((service, index) => (
+                            <ServiceCard
+                                key={service.id}
+                                title={service.title}
+                                description={service.category}
+                                icon={service.icon}
+                                delay={index * 0.05}
+                                onClick={() => router.push(service.path)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Wi-Fi Quick Access Card (Luxury Redesign) */}
+                    {(branding?.wifiName || branding?.wifiPassword) && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group mt-10"
+                        >
+                            <div className="absolute top-0 right-0 p-8 opacity-10">
+                                <Wifi className="w-32 h-32" />
+                            </div>
+                            <div className="relative z-10">
+                                <div className="flex items-center mb-6">
+                                    <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mr-4 border border-white/10">
+                                        <Wifi className="w-5 h-5" />
                                     </div>
-                                ))}
-                            </div>
-                            <div>
-                                <p className="text-xs font-black uppercase tracking-widest text-blue-400">Live Mission</p>
-                                <p className="text-sm font-bold">{activeRequests.length} active signal{activeRequests.length > 1 ? 's' : ''} in progress</p>
-                            </div>
-                        </div>
-                        <CheckCircle className="w-5 h-5 text-green-500 animate-pulse" />
-                    </div>
-                </motion.div>
-            )}
-
-            {/* Wi-Fi Quick Access Card */}
-            {(branding?.wifiName || branding?.wifiPassword) && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.25 }}
-                    className="mb-8 bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm relative overflow-hidden group"
-                >
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <Wifi className="w-24 h-24" />
-                    </div>
-                    <div className="relative z-10">
-                        <div className="flex items-center mb-4">
-                            <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center mr-3" style={{ backgroundColor: `${branding?.primaryColor}15`, color: branding?.primaryColor }}>
-                                <Wifi className="w-4 h-4" />
-                            </div>
-                            <h3 className="font-black text-slate-800 tracking-tight">Property Wi-Fi</h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Network</p>
-                                <p className="font-bold text-slate-900 truncate">{branding.wifiName || "Guest_WiFi"}</p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Password</p>
-                                <div className="flex items-center">
-                                    <p className="font-mono font-bold text-slate-800 mr-2">{branding.wifiPassword || "Relax123"}</p>
-                                    <button
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(branding.wifiPassword || "Relax123");
-                                            alert("Password copied!");
-                                        }}
-                                        className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline"
-                                        style={{ color: branding?.primaryColor }}
-                                    >
-                                        Copy
-                                    </button>
+                                    <h3 className="text-xl font-serif">Property Wi-Fi</h3>
+                                </div>
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-white/40 mb-2">Network</p>
+                                        <p className="font-bold text-white truncate text-sm">{branding.wifiName || "Guest_WiFi"}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-white/40 mb-2">Password</p>
+                                        <button
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(branding.wifiPassword || "");
+                                                alert("Password copied to concierge clip");
+                                            }}
+                                            className="flex items-center active:scale-95 transition-transform"
+                                        >
+                                            <p className="font-mono font-bold text-white mr-3 text-sm">{branding.wifiPassword || "********"}</p>
+                                            <div className="text-[8px] font-black uppercase tracking-widest bg-white/10 px-2 py-1 rounded-lg">Copy</div>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </motion.div>
+                    )}
                 </motion.div>
-            )}
-
-            <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex items-center justify-between mb-6"
-            >
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Discover</h2>
-                <div className="flex space-x-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-600" style={{ backgroundColor: branding?.primaryColor }}></div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-200"></div>
-                </div>
-            </motion.div>
-
-            <motion.div
-                variants={container}
-                initial="hidden"
-                animate="show"
-                className="grid grid-cols-2 gap-5"
-            >
-                {services.map((service, index) => (
-                    <ServiceCard
-                        key={service.id}
-                        title={service.title}
-                        description={service.category}
-                        icon={service.icon}
-                        delay={0.1 + index * 0.05}
-                        onClick={() => router.push(service.path)}
-                    />
-                ))}
-            </motion.div>
-
-            {/* Premium Promo Card */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-                className="mt-8 relative rounded-[2.5rem] overflow-hidden group shadow-2xl"
-            >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-700 opacity-90" style={{ backgroundImage: `linear-gradient(to right, ${branding?.primaryColor}, ${branding?.accentColor})` }}></div>
-                <div className="relative p-8 text-white">
-                    <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Premium Offer</span>
-                    <h3 className="text-2xl font-black mt-3 leading-tight">Relax at our<br />Infinity Spa</h3>
-                    <p className="text-white/70 text-sm mt-2 font-medium">Book now for 20% off all treatments.</p>
-                    <button className="mt-6 bg-white text-blue-600 px-6 py-2.5 rounded-2xl font-bold text-sm shadow-xl shadow-black/10 active:scale-95 transition-transform" style={{ color: branding?.primaryColor }}>
-                        Explore Spa
-                    </button>
-                </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

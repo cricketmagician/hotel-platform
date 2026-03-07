@@ -21,26 +21,28 @@ export function BottomNav() {
     ];
 
     return (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-40">
-            <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-[2rem] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-                <div className="flex justify-around items-center">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-40">
+            <div className="glass-dark rounded-[2.5rem] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]">
+                <div className="flex justify-around items-center px-2">
                     {items.map((item) => {
                         const active = isActive(item.key);
                         return (
                             <Link
                                 key={item.key}
                                 href={item.href}
-                                className="relative flex flex-col items-center flex-1 py-3 outline-none"
+                                className="relative flex flex-col items-center flex-1 py-3 outline-none group"
                             >
-                                {active && (
-                                    <motion.div
-                                        layoutId="active-nav"
-                                        className="absolute inset-0 bg-blue-600 rounded-2xl"
-                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                    />
-                                )}
-                                <item.icon className={`w-5 h-5 mb-1 relative z-10 transition-colors duration-300 ${active ? "text-white" : "text-slate-400"}`} />
-                                <span className={`text-[10px] font-bold relative z-10 transition-colors duration-300 ${active ? "text-white" : "text-slate-400"}`}>
+                                <div className="relative mb-1">
+                                    <item.icon className={`w-5 h-5 transition-all duration-500 scale-90 group-hover:scale-100 ${active ? "text-amber-500" : "text-slate-500"}`} />
+                                    {active && (
+                                        <motion.div
+                                            layoutId="active-nav-glow"
+                                            className="absolute inset-0 bg-amber-500/20 blur-md rounded-full"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                </div>
+                                <span className={`text-[9px] font-black uppercase tracking-[0.15em] transition-colors duration-500 ${active ? "text-amber-500" : "text-slate-500"}`}>
                                     {item.label}
                                 </span>
                             </Link>

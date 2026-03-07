@@ -1,12 +1,16 @@
 :root {
-  --primary: #2563eb;
-  --primary-accent: #4f46e5;
+  --primary: #0f172a;
+  /* Deep Navy/Charcoal */
+  --primary-accent: #b45309;
+  /* Warm Amber/Gold */
   --primary-color: var(--primary);
-  --secondary-color: #334155;
+  --secondary-color: #475569;
   --accent-color: var(--primary-accent);
-  --background: #f8fafc;
+  --background: #fdfaf7;
+  /* Soft Beige Off-white */
   --foreground: #0f172a;
-  --bg-pattern: none;
+  --bg-pattern: radial-gradient(at top right, #fff7ed 0%, transparent 50%),
+    radial-gradient(at bottom left, #f1f5f9 0%, transparent 50%);
 }
 
 body {
