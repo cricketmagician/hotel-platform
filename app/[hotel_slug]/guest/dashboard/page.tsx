@@ -272,7 +272,7 @@ export default function GuestDashboard() {
                         {[
                             { label: "Laundry", icon: <Shirt />, bg: "bg-slate-900/5 text-slate-900", action: () => { } },
                             { label: "Wi-Fi", icon: <Wifi />, bg: "bg-amber-600/10 text-amber-700", action: () => { router.push(`/${hotelSlug}/guest/wifi`) } },
-                            { label: "Dining", icon: <ChefHat />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/restaurant`) } },
+                            { label: "Dining", icon: <Utensils />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/restaurant`) } },
                             {
                                 label: "Contact",
                                 icon: <Phone />,
