@@ -11,6 +11,8 @@ export interface HotelBranding {
     logoImage?: string;
     primaryColor: string;
     accentColor: string;
+    wifiName?: string;
+    wifiPassword?: string;
     bgPattern?: string;
 }
 
@@ -419,6 +421,8 @@ export async function saveHotelBranding(id: string, updates: Partial<HotelBrandi
             logo_image: updates.logoImage,
             primary_color: updates.primaryColor,
             accent_color: updates.accentColor,
+            wifi_name: updates.wifiName,
+            wifi_password: updates.wifiPassword,
         })
         .eq('id', id);
 

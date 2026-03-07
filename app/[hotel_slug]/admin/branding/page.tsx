@@ -164,6 +164,35 @@ export default function BrandingPage() {
                             </div>
                         </div>
                     </section>
+
+                    <section className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                        <div className="flex items-center mb-6">
+                            <RefreshCw className="w-5 h-5 text-blue-600 mr-3" style={{ color: config.primaryColor }} />
+                            <h2 className="text-xl font-black text-slate-900">Property Services</h2>
+                        </div>
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Wi-Fi Network Name (SSID)</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Hotel_Guest"
+                                    value={config.wifiName || ""}
+                                    onChange={(e) => setConfig({ ...config, wifiName: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 focus:ring-2 transition-all outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Wi-Fi Password</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. welcome123"
+                                    value={config.wifiPassword || ""}
+                                    onChange={(e) => setConfig({ ...config, wifiPassword: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 focus:ring-2 transition-all outline-none"
+                                />
+                            </div>
+                        </div>
+                    </section>
                 </div>
 
                 {/* Preview Panel */}

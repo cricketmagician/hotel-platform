@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS hotels (
     logo_image TEXT, -- URL to actual logo image
     primary_color TEXT DEFAULT '#2563eb',
     accent_color TEXT DEFAULT '#4f46e5',
+    wifi_name TEXT,
+    wifi_password TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

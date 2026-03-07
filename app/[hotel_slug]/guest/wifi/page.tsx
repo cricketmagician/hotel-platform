@@ -13,10 +13,11 @@ export default function WifiPage() {
 
     const [copied, setCopied] = useState(false);
 
-    const wifiNetwork = branding?.name ? `${branding.name.replace(/\s+/g, '')}_Guest` : "Hotel_Guest";
-    const wifiPassword = "RelaxAndUnwind";
+    const wifiNetwork = branding?.wifiName || (branding?.name ? `${branding.name.replace(/\s+/g, '')}_Guest` : "Hotel_Guest");
+    const wifiPassword = branding?.wifiPassword || "RelaxAndUnwind";
 
     const handleCopy = () => {
+        if (!wifiPassword) return;
         navigator.clipboard.writeText(wifiPassword);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
