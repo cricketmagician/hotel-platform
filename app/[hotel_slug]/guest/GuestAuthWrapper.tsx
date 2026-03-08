@@ -78,7 +78,11 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
             if (storedCheckoutDate) setCheckoutDate(storedCheckoutDate);
             if (storedCheckoutTime) setCheckoutTime(storedCheckoutTime);
             if (storedNumGuests) setNumGuests(parseInt(storedNumGuests));
-            if (storedCheckedInAt) setCheckedInAt(parseInt(storedCheckedInAt));
+            if (storedCheckedInAt) {
+                const parsed = parseInt(storedCheckedInAt);
+                setCheckedInAt(parsed);
+                console.log(`[${timestamp}] AuthLogic: Restored session timestamp: ${parsed}`);
+            }
 
             if (effectivePin) {
                 console.log(`[${timestamp}] AuthLogic: Auto-verify for ${effectiveRoom}`);
@@ -101,6 +105,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                         if (res.data.checked_in_at) {
                             setCheckedInAt(res.data.checked_in_at);
                             localStorage.setItem(`hotel_checked_in_at_${hotelSlug}`, res.data.checked_in_at.toString());
+                            console.log(`[${timestamp}] AuthLogic: Verified session timestamp: ${res.data.checked_in_at}`);
                         }
                     } else {
                         console.warn(`[${timestamp}] AuthLogic: VERIFICATION FAILED.`);
