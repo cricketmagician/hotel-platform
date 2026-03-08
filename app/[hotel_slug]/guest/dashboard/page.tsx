@@ -298,7 +298,7 @@ export default function GuestDashboard() {
                                 },
                                 { label: "Dining", icon: <Utensils />, bg: "bg-red-600/10 text-red-700", action: () => { router.push(`/${hotelSlug}/guest/restaurant`) } },
                                 { label: "Maintenance", icon: <Wrench />, bg: "bg-indigo-600/10 text-indigo-700", action: () => { router.push(`/${hotelSlug}/guest/services?type=maintenance`) } },
-                                { label: "Late Checkout", icon: <Clock />, bg: "bg-purple-600/10 text-purple-700", action: () => { router.push(`/${hotelSlug}/guest/services?type=late_checkout`) } },
+                                { label: "Late Checkout", icon: <Clock />, bg: "bg-purple-600/10 text-purple-700", action: () => { router.push(`/${hotelSlug}/guest/late-checkout`) } },
                                 { label: "Laundry", icon: <Shirt />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/services?type=laundry`) } },
                             ].map((action, i) => (
                                 <button
