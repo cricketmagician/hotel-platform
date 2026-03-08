@@ -12,7 +12,7 @@ export default function AdminLayout({
 }) {
     const params = useParams();
     const pathname = usePathname();
-    const hotelSlug = params?.hotel_slug as string;
+    const hotelSlug = (params?.hotel_slug as string) || '';
 
     // Check if we are on the login page
     const isLoginPage = pathname?.endsWith('/login');
@@ -36,22 +36,48 @@ export default function AdminLayout({
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 flex">
-            <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
-                <div className="p-4 font-bold border-b text-xl text-primary">Admin Console</div>
-                <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors mb-1"
-                        >
-                            {React.cloneElement(item.icon, { className: "w-5 h-5 mr-3" })}
-                            {item.name}
-                        </Link>
-                    ))}
+            <aside className="w-72 bg-white border-r hidden md:flex flex-col h-screen sticky top-0 shadow-sm transition-all duration-300">
+                <div className="p-8 border-b">
+                    <h1 className="text-2xl font-black text-slate-900 tracking-tighter">
+                        Admin <span className="text-red-600">Console</span>
+                    </h1>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Management Suite v2.0</p>
+                </div>
+
+                <nav className="p-4 space-y-1.5 flex-1 overflow-y-auto">
+                    {navItems.map((item) => {
+                        const isActive = pathname === item.href;
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className={`flex items-center px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 group ${isActive
+                                        ? 'bg-red-50 text-red-600 shadow-sm shadow-red-100'
+                                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                                    }`}
+                            >
+                                <div className={`mr-3.5 transition-colors duration-200 ${isActive ? 'text-red-600' : 'text-slate-400 group-hover:text-slate-900'}`}>
+                                    {isActive ? React.cloneElement(item.icon, { className: "w-5 h-5" }) : item.icon}
+                                </div>
+                                {item.name}
+                                {isActive && (
+                                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
+                                )}
+                            </Link>
+                        );
+                    })}
                 </nav>
+
+                <div className="p-4 border-t bg-slate-50/50">
+                    <button
+                        onClick={() => window.location.href = `/${hotelSlug}/guest/dashboard`}
+                        className="w-full flex items-center justify-center px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black text-slate-600 hover:bg-slate-50 transition-all shadow-sm active:scale-[0.98]"
+                    >
+                        Switch to Guest View
+                    </button>
+                </div>
             </aside>
-            <main className="flex-1 overflow-x-hidden w-full">
+            <main className="flex-1 overflow-x-hidden w-full bg-slate-50/30">
                 {children}
             </main>
         </div>

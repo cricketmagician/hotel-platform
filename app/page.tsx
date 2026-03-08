@@ -238,7 +238,7 @@ export default function LandingPage() {
                                 <p className="text-slate-500 font-medium">Perfect for boutique hotels</p>
                             </div>
                             <div className="mb-8">
-                                <span className="text-5xl font-black text-slate-900">$49</span>
+                                <span className="text-5xl font-black text-slate-900">₹4000</span>
                                 <span className="text-slate-400 font-bold">/month</span>
                             </div>
                             <ul className="space-y-4 mb-10 flex-1">
@@ -272,7 +272,7 @@ export default function LandingPage() {
                                 <p className="text-slate-400 font-medium">For growing hospitality brands</p>
                             </div>
                             <div className="mb-8 text-white">
-                                <span className="text-5xl font-black">$99</span>
+                                <span className="text-5xl font-black">₹8000</span>
                                 <span className="text-slate-500 font-bold">/month</span>
                             </div>
                             <ul className="space-y-4 mb-10 flex-1">

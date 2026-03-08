@@ -56,8 +56,21 @@ export function DepartmentDashboard({ department, title, icon }: DepartmentDashb
             if (saved !== null) {
                 setAudioEnabled(saved === 'true');
             }
+
+            const handleGlobalClick = () => {
+                if (!audioInitialized) {
+                    initAudioContext();
+                    setAudioInitialized(true);
+                }
+            };
+            window.addEventListener('mousedown', handleGlobalClick);
+            window.addEventListener('touchstart', handleGlobalClick);
+            return () => {
+                window.removeEventListener('mousedown', handleGlobalClick);
+                window.removeEventListener('touchstart', handleGlobalClick);
+            }
         }
-    }, [department]);
+    }, [department, audioInitialized]);
 
     useEffect(() => {
         if (!audioEnabled) {
@@ -126,19 +139,47 @@ export function DepartmentDashboard({ department, title, icon }: DepartmentDashb
 
     return (
         <div className="p-8 max-w-7xl mx-auto">
+            {/* Audio Signal Awareness Banner */}
             <AnimatePresence>
-                {audioEnabled && !audioInitialized && (
-                    <motion.div initial={{ y: -100 }} animate={{ y: 0 }} exit={{ y: -100 }} className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4">
-                        <button onClick={() => { initAudioContext(); setAudioInitialized(true); }} className="w-full bg-blue-600 text-white p-4 rounded-2xl shadow-2xl flex items-center justify-between">
+                {!audioEnabled && (
+                    <motion.div
+                        initial={{ y: -100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -100, opacity: 0 }}
+                        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4"
+                    >
+                        <button
+                            onClick={toggleAudio}
+                            className="w-full bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex items-center justify-between group hover:bg-slate-800 transition-all border-b-4 border-slate-700 active:border-b-0 active:translate-y-1"
+                        >
                             <div className="flex items-center">
-                                <Bell className="w-5 h-5 mr-4 animate-bounce" />
+                                <div className="bg-red-500/20 p-2 rounded-xl mr-4 animate-pulse">
+                                    <VolumeX className="w-5 h-5 text-red-400" />
+                                </div>
                                 <div className="text-left">
-                                    <p className="font-black text-sm uppercase tracking-wider">Activate {title} Alerts</p>
-                                    <p className="text-[10px] font-bold opacity-80">Click to enable departmental signals</p>
+                                    <p className="font-black text-sm uppercase tracking-wider">{title} Signals Muted</p>
+                                    <p className="text-[10px] font-bold text-slate-400 opacity-80">Click to activate departmental alerts.</p>
                                 </div>
                             </div>
-                            <div className="bg-white text-blue-600 px-4 py-2 rounded-xl font-black text-[10px] uppercase">Initialize</div>
+                            <div className="bg-white text-slate-900 px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest group-hover:scale-105 transition-transform">
+                                Turn On
+                            </div>
                         </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Subtle initialization prompt */}
+            <AnimatePresence>
+                {audioEnabled && !audioInitialized && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="fixed bottom-6 right-6 z-50 pointer-events-none"
+                    >
+                        <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                            Audio Standby - Click anywhere to activate
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
