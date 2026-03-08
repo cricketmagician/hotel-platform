@@ -1,3 +1,6 @@
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Core tables for Hotel Platform SaaS
 
 -- 1. Hotels (Branding & Configuration)
