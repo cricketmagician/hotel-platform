@@ -124,8 +124,12 @@ export default function BillPage() {
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-slate-800 text-sm">{req.type}</h4>
-                                    {req.notes && <p className="text-[10px] text-blue-600 font-bold mt-0.5 uppercase tracking-tighter line-clamp-1">{req.notes}</p>}
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{req.time}</p>
+                                    {req.notes && (
+                                        <p className="text-[10px] text-blue-600 font-bold mt-1 uppercase tracking-tighter bg-blue-50 px-2 py-0.5 rounded-md inline-block">
+                                            {req.notes}
+                                        </p>
+                                    )}
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">{req.time}</p>
                                 </div>
                             </div>
                             <span className="font-black text-slate-900">${(req.total || 0).toFixed(2)}</span>

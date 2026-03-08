@@ -173,8 +173,16 @@ export default function AdminCheckoutPage() {
                                                 <tr key={req.id}>
                                                     <td className="py-6 pr-6">
                                                         <p className="font-bold text-slate-800">{req.type}</p>
-                                                        {req.notes && <p className="text-xs text-blue-600 font-bold mt-1 uppercase tracking-tighter">{req.notes}</p>}
-                                                        <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-tighter">{req.time} • {req.is_paid ? 'PAID' : 'PENDING'}</p>
+                                                        {req.notes && (
+                                                            <div className="mt-2 flex flex-wrap gap-1">
+                                                                {req.notes.split(',').map((note, i) => (
+                                                                    <span key={i} className="text-[9px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-black uppercase tracking-tighter border border-blue-100">
+                                                                        {note.trim()}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                        <p className="text-[10px] text-slate-400 mt-2 uppercase tracking-tighter font-bold">{req.time} • {req.is_paid ? 'PAID' : 'PENDING'}</p>
                                                     </td>
                                                     <td className="py-6 text-right font-black text-slate-900">
                                                         ₹{(req.total || 0).toFixed(2)}
