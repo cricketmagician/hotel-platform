@@ -272,42 +272,47 @@ export default function GuestDashboard() {
             >
                 {/* 2. Quick Actions Grid (Unified Luxury Palette) */}
                 <motion.section variants={item}>
-                    <div className="flex overflow-x-auto pb-4 -mx-1 px-1 gap-8 no-scrollbar snap-x">
-                        {[
-                            { label: "Wi-Fi", icon: <Wifi />, bg: "bg-amber-600/10 text-amber-700", action: () => { router.push(`/${hotelSlug}/guest/wifi`) } },
-                            {
-                                label: "Call",
-                                icon: <Phone />,
-                                bg: "bg-emerald-600/10 text-emerald-700",
-                                action: () => {
-                                    if (branding?.receptionPhone) {
-                                        window.location.href = `tel:${branding.receptionPhone}`;
-                                    } else {
-                                        setToast({
-                                            message: "Reception phone not configured.",
-                                            type: "error",
-                                            isVisible: true
-                                        });
-                                        setTimeout(() => setToast(prev => ({ ...prev, isVisible: false })), 3000);
+                    <div className="bg-white/45 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/40 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.03)] relative overflow-hidden group">
+                        {/* Subtle Gradient Glow */}
+                        <div className="absolute -right-20 -top-20 w-64 h-64 bg-amber-500/5 blur-[100px] rounded-full group-hover:bg-amber-500/10 transition-colors duration-700" />
+
+                        <div className="flex overflow-x-auto no-scrollbar snap-x gap-8 relative z-10">
+                            {[
+                                { label: "Wi-Fi", icon: <Wifi />, bg: "bg-amber-600/10 text-amber-700", action: () => { router.push(`/${hotelSlug}/guest/wifi`) } },
+                                {
+                                    label: "Call",
+                                    icon: <Phone />,
+                                    bg: "bg-emerald-600/10 text-emerald-700",
+                                    action: () => {
+                                        if (branding?.receptionPhone) {
+                                            window.location.href = `tel:${branding.receptionPhone}`;
+                                        } else {
+                                            setToast({
+                                                message: "Reception phone not configured.",
+                                                type: "error",
+                                                isVisible: true
+                                            });
+                                            setTimeout(() => setToast(prev => ({ ...prev, isVisible: false })), 3000);
+                                        }
                                     }
-                                }
-                            },
-                            { label: "Dining", icon: <Utensils />, bg: "bg-red-600/10 text-red-700", action: () => { router.push(`/${hotelSlug}/guest/restaurant`) } },
-                            { label: "Maintenance", icon: <Wrench />, bg: "bg-indigo-600/10 text-indigo-700", action: () => { router.push(`/${hotelSlug}/guest/services?type=maintenance`) } },
-                            { label: "Late Checkout", icon: <Clock />, bg: "bg-purple-600/10 text-purple-700", action: () => { router.push(`/${hotelSlug}/guest/services?type=late_checkout`) } },
-                            { label: "Laundry", icon: <Shirt />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/services?type=laundry`) } },
-                        ].map((action, i) => (
-                            <button
-                                key={i}
-                                onClick={() => action.action()}
-                                className="flex flex-col items-center group flex-shrink-0 snap-center"
-                            >
-                                <div className={`w-16 h-16 rounded-2xl ${action.bg} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md transition-all group-active:scale-95 border border-slate-100/50`}>
-                                    {renderIcon(action.icon, "w-7 h-7")}
-                                </div>
-                                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 group-hover:text-slate-600 transition-colors">{action.label}</span>
-                            </button>
-                        ))}
+                                },
+                                { label: "Dining", icon: <Utensils />, bg: "bg-red-600/10 text-red-700", action: () => { router.push(`/${hotelSlug}/guest/restaurant`) } },
+                                { label: "Maintenance", icon: <Wrench />, bg: "bg-indigo-600/10 text-indigo-700", action: () => { router.push(`/${hotelSlug}/guest/services?type=maintenance`) } },
+                                { label: "Late Checkout", icon: <Clock />, bg: "bg-purple-600/10 text-purple-700", action: () => { router.push(`/${hotelSlug}/guest/services?type=late_checkout`) } },
+                                { label: "Laundry", icon: <Shirt />, bg: "bg-slate-900/5 text-slate-900", action: () => { router.push(`/${hotelSlug}/guest/services?type=laundry`) } },
+                            ].map((action, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => action.action()}
+                                    className="flex flex-col items-center group flex-shrink-0 snap-center"
+                                >
+                                    <div className={`w-16 h-16 rounded-2xl ${action.bg} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md transition-all group-active:scale-95 border border-white/50 backdrop-blur-sm`}>
+                                        {renderIcon(action.icon, "w-7 h-7")}
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 group-hover:text-slate-600 transition-colors">{action.label}</span>
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </motion.section>
 
