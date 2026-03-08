@@ -72,7 +72,16 @@ export default function AnalyticsPage() {
             if (r.type === "Dining Order" && r.notes) {
                 const dishes = r.notes.split(",").map(d => d.trim());
                 dishes.forEach(d => {
-                    if (d) dishCounts[d] = (dishCounts[d] || 0) + 1;
+                    if (d) {
+                        const match = d.match(/^(\d+)[x\s]+(.+)$/i);
+                        if (match) {
+                            const qty = parseInt(match[1]);
+                            const name = match[2].trim();
+                            dishCounts[name] = (dishCounts[name] || 0) + qty;
+                        } else {
+                            dishCounts[d] = (dishCounts[d] || 0) + 1;
+                        }
+                    }
                 });
             }
         });
@@ -133,7 +142,7 @@ export default function AnalyticsPage() {
                 <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <BarChart3 className="w-10 h-10 text-slate-300" />
                 </div>
-                <h2 className="text-2xl font-black text-slate-900">Gathering Insights...</h2>
+                <h2 className="text-2xl font-black text-slate-900 font-sans">Gathering Insights...</h2>
                 <p className="text-slate-500 mt-2">When guests start ordering, your data will appear here.</p>
             </div>
         );
@@ -153,8 +162,8 @@ export default function AnalyticsPage() {
                             Syncing Data
                         </div>
                     </div>
-                    <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-none mb-3">
-                        Hotel <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600" style={{ backgroundImage: `linear-gradient(to right, ${branding?.primaryColor || '#2563eb'}, ${branding?.accentColor || '#4f46e5'})` }}>Intelligence</span>
+                    <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-none mb-3 font-sans">
+                        Hotel <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-sans" style={{ backgroundImage: `linear-gradient(to right, ${branding?.primaryColor || '#2563eb'}, ${branding?.accentColor || '#4f46e5'})` }}>Intelligence</span>
                     </h1>
                     <p className="text-slate-500 font-medium">Detailed breakdown of operations, kitchen performance, and revenue.</p>
                 </div>
@@ -197,7 +206,7 @@ export default function AnalyticsPage() {
                             {stat.icon}
                         </div>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
-                        <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-2">{stat.value}</h3>
+                        <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-2 font-sans">{stat.value}</h3>
                         <p className="text-xs font-bold text-slate-400 flex items-center">
                             <ArrowUpRight className="w-3 h-3 mr-1 text-green-500" />
                             {stat.sub}
@@ -211,7 +220,7 @@ export default function AnalyticsPage() {
                 <motion.div className="xl:col-span-2 bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm overflow-hidden relative">
                     <div className="flex justify-between items-center mb-10">
                         <div>
-                            <h2 className="text-2xl font-black text-slate-900 mb-1">Kitchen Analytics</h2>
+                            <h2 className="text-2xl font-black text-slate-900 mb-1 font-sans">Kitchen Analytics</h2>
                             <p className="text-sm font-medium text-slate-400">Deep-dive into culinary performance</p>
                         </div>
                         <div className="p-4 bg-slate-50 rounded-2xl">
@@ -221,7 +230,7 @@ export default function AnalyticsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div className="space-y-8">
-                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 font-sans">
                                 <PieChart className="w-4 h-4" /> Best Selling Dishes
                             </h3>
                             <div className="space-y-6">
@@ -245,21 +254,21 @@ export default function AnalyticsPage() {
                         </div>
 
                         <div className="space-y-8 bg-slate-50/50 p-8 rounded-[2.5rem] border border-slate-100">
-                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 text-center justify-center">
+                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 text-center justify-center font-sans">
                                 Revenue Efficiency
                             </h3>
                             <div className="flex flex-col items-center justify-center py-6 text-center">
-                                <div className="text-5xl font-black text-slate-900 mb-2">₹{analytics.kitchenRevenue.toLocaleString()}</div>
+                                <div className="text-5xl font-black text-slate-900 mb-2 font-sans">₹{analytics.kitchenRevenue.toLocaleString()}</div>
                                 <p className="text-xs font-bold text-slate-400 max-w-[200px]">Total generated from Food & Beverage services</p>
 
                                 <div className="mt-10 grid grid-cols-2 gap-4 w-full">
                                     <div className="bg-white p-4 rounded-2xl border border-slate-100">
                                         <div className="text-xs font-black text-slate-400 mb-1">MARGIN</div>
-                                        <div className="text-lg font-black text-blue-600">64%</div>
+                                        <div className="text-lg font-black text-blue-600 font-sans">64%</div>
                                     </div>
                                     <div className="bg-white p-4 rounded-2xl border border-slate-100">
                                         <div className="text-xs font-black text-slate-400 mb-1">WASTE</div>
-                                        <div className="text-lg font-black text-red-500">2.1%</div>
+                                        <div className="text-lg font-black text-red-500 font-sans">2.1%</div>
                                     </div>
                                 </div>
                             </div>
@@ -272,7 +281,7 @@ export default function AnalyticsPage() {
                     style={{ backgroundColor: branding?.primaryColor || '#0f172a' }}>
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
 
-                    <h2 className="text-2xl font-black mb-8 relative z-10">Operations Heatmap</h2>
+                    <h2 className="text-2xl font-black mb-8 relative z-10 font-sans">Operations Heatmap</h2>
 
                     <div className="space-y-4 relative z-10">
                         <p className="text-xs font-bold text-white/60 mb-6">Density of requests over 24 hours</p>
@@ -313,7 +322,7 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Service Quality */}
                 <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm">
-                    <h2 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                    <h2 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3 font-sans">
                         <Activity className="w-6 h-6 text-slate-400" />
                         Service Distribution
                     </h2>
@@ -330,7 +339,7 @@ export default function AnalyticsPage() {
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="font-black text-slate-900">₹{stat.revenue.toLocaleString()}</div>
+                                    <div className="font-black text-slate-900 font-sans">₹{stat.revenue.toLocaleString()}</div>
                                     <div className="text-[10px] font-black uppercase text-green-500">Collected</div>
                                 </div>
                             </div>
@@ -340,7 +349,7 @@ export default function AnalyticsPage() {
 
                 {/* High Spending Rooms */}
                 <div className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm">
-                    <h1 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                    <h1 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3 font-sans">
                         <Search className="w-6 h-6 text-slate-400" />
                         Top Performing Rooms
                     </h1>
@@ -357,10 +366,10 @@ export default function AnalyticsPage() {
                                 {analytics.topRooms.map((room, idx) => (
                                     <tr key={idx} className="group hover:bg-slate-50 transition-colors">
                                         <td className="py-5 px-4">
-                                            <div className="font-black text-slate-900 text-lg">Room {room.room}</div>
+                                            <div className="font-black text-slate-900 text-lg font-sans">Room {room.room}</div>
                                         </td>
                                         <td className="py-5 px-4 font-bold text-slate-500">{room.count} Services</td>
-                                        <td className="py-5 px-4 text-right font-black text-slate-900 text-lg">₹{room.spend.toLocaleString()}</td>
+                                        <td className="py-5 px-4 text-right font-black text-slate-900 text-lg font-sans">₹{room.spend.toLocaleString()}</td>
                                     </tr>
                                 ))}
                             </tbody>

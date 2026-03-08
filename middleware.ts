@@ -11,8 +11,8 @@ export async function middleware(request: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    // Bypass middleware if Supabase is not configured (Demo Mode)
-    if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('your-project-id')) {
+    // Bypass middleware if Supabase is not configured (Demo Mode) or if Force Demo is active
+    if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('your-project-id') || process.env.NEXT_PUBLIC_FORCE_DEMO === 'true') {
         return response;
     }
 

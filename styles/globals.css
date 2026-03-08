@@ -54,9 +54,16 @@ body {
 
 h1,
 h2,
-h3,
-.font-serif {
+h3 {
   font-family: var(--font-playfair), serif;
+}
+
+.font-sans {
+  font-family: var(--font-inter), sans-serif !important;
+}
+
+.font-serif {
+  font-family: var(--font-playfair), serif !important;
 }
 
 /* Print Utilities */

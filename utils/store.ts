@@ -80,6 +80,9 @@ export interface MenuItem {
 
 // --- Utilities ---
 export const isDemoMode = () => {
+    // Check if demo mode is explicitly forced via env var or if credentials are missing
+    if (process.env.NEXT_PUBLIC_FORCE_DEMO === 'true') return true;
+
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -114,7 +117,38 @@ const saveDemoRooms = (hotelId: string, rooms: Room[]) => {
 const getDemoRequests = (hotelId: string): HotelRequest[] => {
     if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem(`${DEMO_REQUESTS_KEY}_${hotelId}`);
-    return stored ? JSON.parse(stored) : [];
+    if (stored) return JSON.parse(stored);
+
+    // Default Demo Data for rich Analytics testing
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const hour = 60 * 60 * 1000;
+
+    const demoRequests: HotelRequest[] = [
+        // Today's peak morning orders
+        { id: 'dr1', hotel_id: hotelId, room: '101', type: 'Dining Order', notes: '2x Continental Breakfast, 1x Coffee', status: 'Completed', timestamp: now - hour * 5, time: '09:30', total: 48.0, is_paid: true },
+        { id: 'dr2', hotel_id: hotelId, room: '102', type: 'Dining Order', notes: '1x Continental Breakfast, 2x Fresh Juice', status: 'Completed', timestamp: now - hour * 5.5, time: '09:00', total: 32.0, is_paid: true },
+        { id: 'dr3', hotel_id: hotelId, room: '201', type: 'Housekeeping', notes: 'Fresh towels and extra pillows', status: 'Completed', timestamp: now - hour * 4, time: '10:30', is_paid: true },
+
+        // Lunch rush
+        { id: 'dr4', hotel_id: hotelId, room: '101', type: 'Dining Order', notes: '1x Caesar Salad, 1x Margherita Pizza', status: 'Completed', timestamp: now - hour * 2, time: '12:45', total: 36.5, is_paid: true },
+        { id: 'dr5', hotel_id: hotelId, room: '305', type: 'Dining Order', notes: '3x Margherita Pizza, 2x Truffle Fries', status: 'Completed', timestamp: now - hour * 1.5, time: '13:15', total: 90.0, is_paid: true },
+
+        // Afternoon / Recent
+        { id: 'dr6', hotel_id: hotelId, room: '103', type: 'Laundry', notes: 'Express service for 2 shirts', status: 'In Progress', timestamp: now - hour * 0.5, time: '14:15', total: 15.0, is_paid: false },
+        { id: 'dr7', hotel_id: hotelId, room: '202', type: 'Reception', notes: 'Late checkout request (4 PM)', status: 'Pending', timestamp: now - 15 * 60 * 1000, time: '14:30', is_paid: false },
+
+        // Past 24 hours distribution for heatmap
+        { id: 'dr8', hotel_id: hotelId, room: '105', type: 'Dining Order', notes: '1x Margherita Pizza', status: 'Completed', timestamp: now - hour * 18, time: '20:45', total: 22.0, is_paid: true },
+        { id: 'dr9', hotel_id: hotelId, room: '204', type: 'Dining Order', notes: '2x Truffle Fries', status: 'Completed', timestamp: now - hour * 19, time: '19:30', total: 24.0, is_paid: true },
+        { id: 'dr10', hotel_id: hotelId, room: '101', type: 'Dining Order', notes: '1x Caesar Salad', status: 'Completed', timestamp: now - hour * 20, time: '18:30', total: 14.5, is_paid: true },
+
+        // More room-wise distribution
+        { id: 'dr11', hotel_id: hotelId, room: 'Room 501', type: 'Dining Order', notes: '4x Margherita Pizza', status: 'Completed', timestamp: now - hour * 12, time: '02:45', total: 88.0, is_paid: true },
+        { id: 'dr12', hotel_id: hotelId, room: 'Room 501', type: 'Dining Order', notes: '1x Truffle Fries', status: 'Completed', timestamp: now - hour * 13, time: '01:45', total: 12.0, is_paid: true },
+    ];
+
+    return demoRequests;
 };
 
 const saveDemoRequests = (hotelId: string, requests: HotelRequest[]) => {
