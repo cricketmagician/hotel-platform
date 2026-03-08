@@ -428,6 +428,43 @@ export default function GuestDashboard() {
                     />
                 </motion.section>
 
+                {/* 5. Active Requests (Status Tracking) */}
+                <AnimatePresence>
+                    {activeRequests.length > 0 && (
+                        <motion.section
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            variants={item}
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center">
+                                    <Clock className="w-4 h-4 text-blue-500 mr-2" />
+                                    <h2 className="text-xl font-serif text-foreground">Your Requests</h2>
+                                </div>
+                                <button onClick={() => router.push(`/${hotelSlug}/guest/status`)} className="text-[10px] font-black text-blue-500 uppercase tracking-widest">View All</button>
+                            </div>
+
+                            <div className="space-y-4">
+                                {activeRequests.slice(0, 2).map((req) => (
+                                    <div key={req.id} className="glass p-5 rounded-[2rem] flex items-center justify-between border border-white/5 shadow-sm">
+                                        <div className="flex items-center">
+                                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mr-4">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-bold text-foreground">{req.type}</p>
+                                                <p className="text-[10px] text-foreground/40 font-medium uppercase tracking-widest mt-0.5">Status: <span className="text-blue-500 font-black">{req.status}</span></p>
+                                            </div>
+                                        </div>
+                                        <ChevronRight className="w-4 h-4 text-foreground/20" />
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.section>
+                    )}
+                </AnimatePresence>
+
                 {/* 6. Concierge Section (Upsell) */}
                 <motion.section variants={item}>
                     <div className="flex items-center justify-between mb-6">
