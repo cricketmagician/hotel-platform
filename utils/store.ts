@@ -401,7 +401,7 @@ export function useSupabaseRequests(hotelId?: string, roomNumber?: string, check
         return () => {
             supabase.removeChannel(subscription);
         };
-    }, [hotelId]);
+    }, [hotelId, roomNumber, checkedInAt]);
 
     return requests;
 }
