@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, ArrowRight, Star, ShieldCheck, Globe, Zap, Check } from "lucide-react";
+import { Building2, ArrowRight, Star, ShieldCheck, Zap, Check, Smile, Users, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -21,7 +21,6 @@ export default function LandingPage() {
                     throw new Error("No data");
                 }
             } catch (err) {
-                // Fallback demo data if DB is empty or not connected
                 setHotels([
                     { id: '1', name: 'The Grand Royale', slug: 'grand-royale', logo_image: null },
                     { id: '2', name: 'Azure Bay Resort', slug: 'azure-bay', logo_image: null },
@@ -54,247 +53,336 @@ export default function LandingPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-slate-900 selection:bg-blue-100 selection:text-blue-900">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--primary-color)] selection:bg-[#C58B2A]/20 selection:text-[#0F1B2D] font-sans overflow-x-hidden">
+            {/* Dynamic Background Elements */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#C58B2A]/5 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#0F1B2D]/5 blur-[120px] rounded-full" />
+            </div>
+
             {/* Navigation */}
-            <nav className="max-w-7xl mx-auto px-6 py-8 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
-                        <Building2 className="text-white w-6 h-6" />
+            <nav className="max-w-7xl mx-auto px-6 py-8 flex items-center justify-between relative z-50">
+                <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-[var(--primary-color)] rounded-2xl flex items-center justify-center shadow-2xl shadow-[#0F1B2D]/20 transform hover:rotate-12 transition-transform duration-500">
+                        <Building2 className="text-white w-7 h-7" />
                     </div>
-                    <span className="text-2xl font-black tracking-tight">Antigravity<span className="text-blue-600">SaaS</span></span>
+                    <span className="text-2xl font-serif font-black tracking-tight italic">Antigravity<span className="text-[#C58B2A] not-italic">SaaS</span></span>
                 </div>
-                <div className="hidden md:flex items-center space-x-8 text-sm font-bold text-slate-500 uppercase tracking-widest">
-                    <a href="#properties" className="hover:text-blue-600 transition-colors">Platform</a>
-                    <a href="#pricing" className="hover:text-blue-600 transition-colors">Pricing</a>
-                    <a href="mailto:support@antigravitysaas.com" className="hover:text-blue-600 transition-colors">Contact</a>
+                <div className="hidden md:flex items-center space-x-10 text-[11px] font-black text-[var(--primary-color)] uppercase tracking-[0.2em]">
+                    <a href="#properties" className="hover:text-[#C58B2A] transition-colors relative group">
+                        Properties
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#C58B2A] group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="#features" className="hover:text-[#C58B2A] transition-colors relative group">
+                        Experience
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#C58B2A] group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="#pricing" className="hover:text-[#C58B2A] transition-colors relative group">
+                        Pricing
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#C58B2A] group-hover:w-full transition-all duration-300"></span>
+                    </a>
                 </div>
                 <button
                     onClick={() => router.push('/register')}
-                    className="bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-black transition-all active:scale-95 shadow-xl shadow-slate-200"
+                    className="bg-[var(--primary-color)] text-white px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all active:scale-95 shadow-2xl shadow-[#0F1B2D]/20"
                 >
                     Add Your Hotel
                 </button>
             </nav>
 
             {/* Hero Section */}
-            <main className="max-w-7xl mx-auto px-6 pt-20 pb-32">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <main className="max-w-7xl mx-auto px-6 pt-24 pb-40">
+                <div className="flex flex-col items-center text-center">
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
+                        className="w-full max-w-5xl"
                     >
-                        <div className="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-8">
-                            <Zap className="w-4 h-4" />
+                        <div className="inline-flex items-center space-x-2 bg-[var(--primary-color)]/5 border border-[var(--primary-color)]/10 text-[var(--primary-color)] px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-12 shadow-sm">
+                            <Zap className="w-3.5 h-3.5 text-[#C58B2A]" />
                             <span>v2.0 Scale Release</span>
                         </div>
-                        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8">
-                            Experience <br />
-                            <span className="text-blue-600">Hospitality</span> <br />
-                            at Scale.
+
+                        <h1 className="text-6xl md:text-[9.5rem] font-serif font-black tracking-tighter leading-[0.85] mb-12 transform-gpu">
+                            5-Star Digital <br />
+                            <span className="text-[#C58B2A]">Experience.</span>
                         </h1>
-                        <p className="text-xl text-slate-500 font-medium max-w-lg mb-10 leading-relaxed">
-                            The world's most advanced multi-tenant hotel management platform.
-                            Built for luxury, designed for real-time guest engagement.
+
+                        <p className="text-xl md:text-2xl text-[var(--text-muted)] font-medium max-w-2xl mx-auto mb-16 leading-relaxed">
+                            The AI-Powered Concierge Platform for Modern Hotels. Automate guest requests, increase satisfaction, and run your property effortlessly.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center space-y-6 sm:space-y-0 sm:space-x-8">
                             <button
                                 onClick={() => router.push('/register')}
-                                className="bg-blue-600 text-white px-10 py-5 rounded-[2rem] font-black text-lg shadow-2xl shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center"
+                                className="group bg-[var(--primary-color)] text-white px-12 py-6 rounded-[2.5rem] font-black text-xl shadow-2xl shadow-[#0F1B2D]/30 hover:bg-black transition-all active:scale-95 flex items-center"
                             >
-                                Start Your Journey <ArrowRight className="ml-2 w-5 h-6 group-hover:translate-x-1 transition-transform" />
+                                Start Free Trial <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
                             </button>
                             <button
                                 onClick={scrollToProperties}
-                                className="bg-white border-2 border-slate-100 text-slate-900 px-10 py-5 rounded-[2rem] font-black text-lg hover:border-blue-200 transition-all active:scale-95"
+                                className="text-[var(--primary-color)] px-10 py-6 rounded-[2.5rem] font-black text-xl hover:bg-white hover:shadow-xl transition-all active:scale-95 border-2 border-transparent hover:border-[var(--primary-color)]/5"
                             >
-                                View Live Hotels
+                                View Live Demo
                             </button>
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        scroll-margin-top="100px"
-                        id="properties"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                        className="relative"
-                    >
-                        <div className="absolute -inset-4 bg-blue-100/50 rounded-[4rem] blur-3xl -z-10"></div>
-                        <div className="bg-white rounded-[3rem] p-10 shadow-[0_50px_100px_rgba(0,0,0,0.08)] border border-slate-50">
-                            <div className="flex items-center justify-between mb-10">
-                                <h3 className="text-2xl font-black tracking-tight">Active Properties</h3>
-                                <div className="flex -space-x-3">
-                                    {[1, 2, 3, 4].map(i => (
-                                        <div key={i} className="w-10 h-10 rounded-full border-4 border-white bg-slate-100 overflow-hidden shadow-sm">
-                                            <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="avatar" />
-                                        </div>
-                                    ))}
-                                    <div className="w-10 h-10 rounded-full border-4 border-white bg-blue-600 text-white flex items-center justify-center text-[10px] font-black shadow-sm">
-                                        +12
-                                    </div>
-                                </div>
-                            </div>
-
-                            {loading ? (
-                                <div className="space-y-4">
-                                    {[1, 2, 3].map(i => (
-                                        <div key={i} className="h-24 bg-slate-50 animate-pulse rounded-3xl" />
-                                    ))}
-                                </div>
-                            ) : (
-                                <motion.div
-                                    variants={container}
-                                    initial="hidden"
-                                    animate="show"
-                                    className="grid gap-4"
-                                >
-                                    {hotels.map((hotel) => (
-                                        <motion.button
-                                            variants={item}
-                                            key={hotel.id}
-                                            onClick={() => router.push(`/${hotel.slug}/guest/dashboard`)}
-                                            className="group bg-slate-50 hover:bg-blue-600 p-6 rounded-[2rem] transition-all text-left flex items-center justify-between"
-                                        >
-                                            <div className="flex items-center">
-                                                <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center group-hover:bg-blue-500 transition-colors shadow-sm">
-                                                    {hotel.logo_image ? (
-                                                        <img src={hotel.logo_image} alt={hotel.name} className="w-8 h-8 object-contain" />
-                                                    ) : (
-                                                        <span className="text-xl font-black text-slate-900 group-hover:text-white">{hotel.name.charAt(0)}</span>
-                                                    )}
-                                                </div>
-                                                <div className="ml-4">
-                                                    <p className="font-black text-lg text-slate-900 group-hover:text-white transition-colors tracking-tight">{hotel.name}</p>
-                                                    <div className="flex items-center mt-0.5">
-                                                        <Star className="w-3 h-3 text-amber-500 fill-amber-500 mr-1 group-hover:text-white group-hover:fill-white" />
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-blue-100">Luxury Collection</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="w-10 h-10 rounded-full bg-white group-hover:bg-blue-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
-                                                <ArrowRight className="text-slate-900 group-hover:text-white w-5 h-5" />
-                                            </div>
-                                        </motion.button>
-                                    ))}
-                                </motion.div>
-                            )}
                         </div>
                     </motion.div>
                 </div>
             </main>
 
-            {/* Trusted By */}
-            <div className="max-w-7xl mx-auto px-6 pb-32">
-                <p className="text-center text-slate-400 text-xs font-black uppercase tracking-[0.3em] mb-12">Empowering Global Excellence</p>
-                <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-                    <div className="flex items-center font-black text-2xl tracking-tighter italic">HILTON</div>
-                    <div className="flex items-center font-black text-2xl tracking-tighter">MARRIOTT</div>
-                    <div className="flex items-center font-black text-2xl tracking-tighter uppercase">Hyatt</div>
-                    <div className="flex items-center font-black text-2xl tracking-tighter">Aman</div>
-                    <div className="flex items-center font-black text-2xl tracking-tighter">Accor</div>
-                </div>
-            </div>
-
-            {/* Features Bento */}
-            <div className="max-w-7xl mx-auto px-6 pb-32">
-                <div className="grid md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 bg-slate-900 rounded-[3rem] p-12 text-white overflow-hidden relative group">
-                        <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl -mr-32 -mb-32"></div>
-                        <h2 className="text-4xl font-black tracking-tight mb-6">Real-time signals across <br /> every property.</h2>
-                        <p className="text-slate-400 max-w-sm font-medium leading-relaxed">
-                            Our instant synchronization engine ensures that guest requests reach your team in under 200ms, regardless of scale.
-                        </p>
-                    </div>
-                    <div className="bg-slate-50 rounded-[3rem] p-12 border border-slate-100">
-                        <ShieldCheck className="w-12 h-12 text-blue-600 mb-6" />
-                        <h3 className="text-2xl font-black mb-4">Enterprise Security</h3>
-                        <p className="text-slate-500 text-sm font-medium leading-relaxed">
-                            Role-based access control and high-grade encryption for all guest data.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Pricing Section */}
-            <section className="py-24 bg-white relative overflow-hidden" id="pricing">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-50/30 rounded-full blur-[120px] -z-10"></div>
+            {/* Authority Layer */}
+            <section className="bg-white py-24 border-y border-[var(--primary-color)]/5">
                 <div className="max-w-7xl mx-auto px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-sm font-black text-blue-600 uppercase tracking-[0.2em] mb-4">Pricing Plans</h2>
-                        <h3 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Simple, Transparent Pricing</h3>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                        {/* Starter Plan */}
-                        <motion.div
-                            whileHover={{ y: -10 }}
-                            className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 flex flex-col"
-                        >
-                            <div className="mb-8">
-                                <h4 className="text-xl font-black text-slate-900 mb-2">Starter Plan</h4>
-                                <p className="text-slate-500 font-medium">Perfect for boutique hotels</p>
-                            </div>
-                            <div className="mb-8">
-                                <span className="text-5xl font-black text-slate-900">₹4000</span>
-                                <span className="text-slate-400 font-bold">/month</span>
-                            </div>
-                            <ul className="space-y-4 mb-10 flex-1">
-                                {['Up to 50 Rooms', 'Basic Guest Services', 'Digital Compendium', 'Email Support'].map((feat) => (
-                                    <li key={feat} className="flex items-center text-slate-600 font-semibold">
-                                        <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                            <Check className="w-3 h-3 text-blue-600" />
-                                        </div>
-                                        {feat}
-                                    </li>
-                                ))}
-                            </ul>
-                            <button
-                                onClick={() => router.push('/register')}
-                                className="w-full py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-black hover:bg-slate-100 transition-all shadow-sm"
-                            >
-                                Get Started
-                            </button>
-                        </motion.div>
-
-                        {/* Pro Plan */}
-                        <motion.div
-                            whileHover={{ y: -10 }}
-                            className="bg-slate-900 p-10 rounded-[2.5rem] border border-slate-800 flex flex-col relative overflow-hidden"
-                        >
-                            <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-bl-2xl">
-                                Recommended
-                            </div>
-                            <div className="mb-8">
-                                <h4 className="text-xl font-black text-white mb-2">Pro Plan</h4>
-                                <p className="text-slate-400 font-medium">For growing hospitality brands</p>
-                            </div>
-                            <div className="mb-8 text-white">
-                                <span className="text-5xl font-black">₹8000</span>
-                                <span className="text-slate-500 font-bold">/month</span>
-                            </div>
-                            <ul className="space-y-4 mb-10 flex-1">
-                                {['Unlimited Rooms', 'Advanced Analytics', 'Custom Branding & Logo', '24/7 Priority Support', 'Multi-staff Access'].map((feat) => (
-                                    <li key={feat} className="flex items-center text-slate-300 font-semibold">
-                                        <div className="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center mr-3">
-                                            <Check className="w-3 h-3 text-white" />
-                                        </div>
-                                        {feat}
-                                    </li>
-                                ))}
-                            </ul>
-                            <button
-                                onClick={() => router.push('/register')}
-                                className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20"
-                            >
-                                Start Free Trial
-                            </button>
-                        </motion.div>
+                    <p className="text-center text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.4em] mb-16">Trusted by World-Class Hospitality Brands</p>
+                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+                        {['HILTON', 'MARRIOTT', 'HYATT', 'AMAN', 'ACCOR', 'RITZ-CARLTON'].map(brand => (
+                            <div key={brand} className="font-serif font-black text-xl md:text-3xl tracking-tighter">{brand}</div>
+                        ))}
                     </div>
                 </div>
             </section>
+
+            {/* Properties Grid */}
+            <section id="properties" className="py-32 max-w-7xl mx-auto px-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+                    <div className="max-w-xl">
+                        <h2 className="text-sm font-black text-[#C58B2A] uppercase tracking-[0.3em] mb-6">Live Properties</h2>
+                        <h3 className="text-5xl md:text-7xl font-serif font-black tracking-tighter leading-none text-[var(--primary-color)]">
+                            Powering Luxury <br /> Stays Worldwide.
+                        </h3>
+                    </div>
+                    <div className="flex -space-x-4">
+                        {[1, 2, 3, 4, 5].map(i => (
+                            <div key={i} className="w-14 h-14 rounded-full border-4 border-[var(--background)] bg-slate-200 overflow-hidden shadow-xl">
+                                <img src={`https://i.pravatar.cc/150?img=${i + 20}`} alt="Guest" />
+                            </div>
+                        ))}
+                        <div className="w-14 h-14 rounded-full border-4 border-[var(--background)] bg-[#C58B2A] text-white flex items-center justify-center text-xs font-black shadow-xl">
+                            +2k
+                        </div>
+                    </div>
+                </div>
+
+                {loading ? (
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="h-[400px] bg-white rounded-[3rem] animate-pulse" />
+                        ))}
+                    </div>
+                ) : (
+                    <motion.div
+                        variants={container}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true }}
+                        className="grid md:grid-cols-3 gap-8"
+                    >
+                        {hotels.map((hotel) => (
+                            <motion.button
+                                variants={item}
+                                key={hotel.id}
+                                onClick={() => router.push(`/${hotel.slug}/guest/dashboard`)}
+                                className="group bg-white p-8 rounded-[3rem] transition-all text-left shadow-2xl shadow-[#0F1B2D]/5 hover:shadow-[#0F1B2D]/10 hover:-translate-y-2 border border-transparent hover:border-[#C58B2A]/20 flex flex-col h-[320px]"
+                            >
+                                <div className="w-16 h-16 rounded-2xl bg-[var(--background)] flex items-center justify-center mb-8 border border-[var(--primary-color)]/5 overflow-hidden">
+                                    {hotel.logo_image ? (
+                                        <img src={hotel.logo_image} alt={hotel.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <Building2 className="w-8 h-8 text-[#C58B2A]" />
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="text-3xl font-serif font-black mb-3 text-[var(--primary-color)]">{hotel.name}</h4>
+                                    <div className="flex items-center space-x-1">
+                                        {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-3 h-3 text-[#C58B2A] fill-[#C58B2A]" />)}
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] ml-2">Luxury Collection</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center text-[#C58B2A] font-black text-xs uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+                                    Enter Dashboard <ArrowUpRight className="ml-2 w-4 h-4" />
+                                </div>
+                            </motion.button>
+                        ))}
+                    </motion.div>
+                )}
+            </section>
+
+            {/* Features / Product Psychology */}
+            <section id="features" className="py-32 bg-[var(--primary-color)] text-white overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C58B2A]/10 rounded-full blur-[150px] -mr-80 -mt-80" />
+                <div className="max-w-7xl mx-auto px-6 relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-24 items-center">
+                        <div>
+                            <h2 className="text-sm font-black text-[#C58B2A] uppercase tracking-[0.3em] mb-8">Product Experience</h2>
+                            <h3 className="text-5xl md:text-7xl font-serif font-black tracking-tighter leading-[0.9] mb-12">
+                                Seamless Flow. <br /> Effortless Control.
+                            </h3>
+                            <div className="space-y-12">
+                                {[
+                                    { icon: <Zap />, title: "Instant Feedback", desc: "Guest requests reach your team in < 200ms. No waiting, no friction." },
+                                    { icon: <Smile />, title: "Cognitive Fluency", desc: "An interface designed for zero effort. If it's easy to use, it's used more." },
+                                    { icon: <Users />, title: "Staff Habit Loop", desc: "Reward mechanisms that encourage staff to resolve requests faster." }
+                                ].map((feature, i) => (
+                                    <div key={i} className="flex items-start space-x-6">
+                                        <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-[#C58B2A] shrink-0 border border-white/10">
+                                            {React.cloneElement(feature.icon as React.ReactElement<any>, { className: "w-7 h-7" })}
+                                        </div>
+                                        <div>
+                                            <h4 className="text-2xl font-black mb-2">{feature.title}</h4>
+                                            <p className="text-slate-400 font-medium leading-relaxed">{feature.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="relative">
+                            <div className="bg-[#1a283dbb] backdrop-blur-3xl rounded-[3rem] p-12 border border-white/5 shadow-2xl relative">
+                                <div className="absolute top-8 left-8 flex items-center space-x-2">
+                                    <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-amber-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                                </div>
+                                <div className="mt-8 space-y-6">
+                                    <div className="h-12 bg-white/5 rounded-2xl animate-pulse" />
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="h-40 bg-white/5 rounded-3xl animate-pulse" />
+                                        <div className="h-40 bg-[#C58B2A]/20 rounded-3xl" />
+                                    </div>
+                                    <div className="h-32 bg-white/5 rounded-3xl animate-pulse" />
+                                </div>
+                                <div className="absolute -bottom-12 -right-12 bg-[#C58B2A] p-8 rounded-[2.5rem] shadow-2xl rotate-6 hover:rotate-0 transition-transform hidden md:block">
+                                    <div className="flex items-center space-x-4 text-white">
+                                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                            <Smile className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Success</p>
+                                            <p className="text-lg font-black italic">Guest Satisfied!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Pricing Section */}
+            <section id="pricing" className="py-40 bg-white relative">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="text-center mb-24">
+                        <h2 className="text-sm font-black text-[#C58B2A] uppercase tracking-[0.3em] mb-6">Pricing</h2>
+                        <h3 className="text-5xl md:text-8xl font-serif font-black tracking-tighter text-[var(--primary-color)]">Invest in Perfection.</h3>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8 items-stretch">
+                        {[
+                            {
+                                name: "Starter",
+                                price: "3,999",
+                                desc: "For boutique hospitality",
+                                features: ["Up to 50 rooms", "Base Guest Experience", "Email Concierge", "Analytics Lite"],
+                                accent: false
+                            },
+                            {
+                                name: "Professional",
+                                price: "8,999",
+                                desc: "The Gold Standard",
+                                features: ["Unlimited rooms", "Full AI Automation", "Custom Branding", "Priority Support", "Staff Habit Engine"],
+                                accent: true,
+                                popular: true
+                            },
+                            {
+                                name: "Enterprise",
+                                price: "Custom",
+                                desc: "Global Hotel Chains",
+                                features: ["Multi-property Sync", "White-label Option", "Direct Integration", "Dedicated Account Mgr", "SOC2 Compliance"],
+                                accent: false
+                            }
+                        ].map((pkg, i) => (
+                            <motion.div
+                                key={pkg.name}
+                                whileHover={{ y: -10 }}
+                                className={`rounded-[3rem] p-12 border relative flex flex-col ${pkg.accent ? 'bg-[var(--primary-color)] text-white border-[var(--primary-color)]' : 'bg-[var(--background)] border-[var(--primary-color)]/5'}`}
+                            >
+                                {pkg.popular && (
+                                    <div className="absolute top-0 right-12 -translate-y-1/2 bg-[#C58B2A] text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">
+                                        Most Popular
+                                    </div>
+                                )}
+                                <div className="mb-12">
+                                    <h4 className={`text-2xl font-black mb-2 ${pkg.accent ? 'text-[#C58B2A]' : 'text-[var(--primary-color)]'}`}>{pkg.name}</h4>
+                                    <p className={`font-medium ${pkg.accent ? 'text-slate-400' : 'text-[var(--text-muted)]'}`}>{pkg.desc}</p>
+                                </div>
+                                <div className="mb-12">
+                                    <div className="flex items-baseline">
+                                        {pkg.price !== "Custom" && <span className="text-2xl font-serif font-black mr-1 italic">₹</span>}
+                                        <span className="text-7xl font-serif font-black tracking-tighter">{pkg.price}</span>
+                                        {pkg.price !== "Custom" && <span className={`ml-2 font-black text-xs uppercase opacity-40`}>/mo</span>}
+                                    </div>
+                                </div>
+                                <ul className="space-y-6 mb-16 flex-1">
+                                    {pkg.features.map(feat => (
+                                        <li key={feat} className="flex items-center space-x-4 text-sm font-bold">
+                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${pkg.accent ? 'bg-[#C58B2A] text-white' : 'bg-[var(--primary-color)]/10 text-[var(--primary-color)]'}`}>
+                                                <Check className="w-3 h-3" />
+                                            </div>
+                                            <span className={pkg.accent ? 'text-slate-200' : 'text-slate-600'}>{feat}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button
+                                    onClick={() => router.push('/register')}
+                                    className={`w-full py-6 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all ${pkg.accent ? 'bg-[#C58B2A] text-white hover:bg-[#d49a37] shadow-xl shadow-[#C58B2A]/20' : 'bg-[var(--primary-color)] text-white hover:bg-black shadow-xl shadow-[#0F1B2D]/10'}`}
+                                >
+                                    Choose {pkg.name}
+                                </button>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Final CTA */}
+            <section className="py-40 bg-[var(--background)]">
+                <div className="max-w-7xl mx-auto px-6 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className="text-sm font-black text-[#C58B2A] uppercase tracking-[0.4em] mb-8">Take the Leap</h2>
+                        <h3 className="text-6xl md:text-[9rem] font-serif font-black tracking-tighter text-[var(--primary-color)] leading-none mb-16">
+                            Ready for the <br /> <span className="italic">Standard?</span>
+                        </h3>
+                        <div className="flex flex-col sm:flex-row items-center justify-center space-y-6 sm:space-y-0 sm:space-x-8">
+                            <button
+                                onClick={() => router.push('/register')}
+                                className="group bg-[var(--primary-color)] text-white px-16 py-8 rounded-[3rem] font-black text-2xl shadow-2xl shadow-[#0F1B2D]/30 hover:bg-black transition-all active:scale-95 flex items-center"
+                            >
+                                Get Started Now <ArrowRight className="ml-4 w-7 h-7 group-hover:translate-x-3 transition-transform" />
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="py-24 bg-white border-t border-[var(--primary-color)]/5">
+                <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
+                    <div className="flex items-center space-x-3">
+                        <Building2 className="text-[#C58B2A] w-8 h-8" />
+                        <span className="text-xl font-serif font-black italic">Antigravity<span className="text-[#C58B2A] not-italic">SaaS</span></span>
+                    </div>
+                    <div className="flex items-center space-x-12 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em]">
+                        <a href="#" className="hover:text-[#C58B2A] transition-colors">Twitter</a>
+                        <a href="#" className="hover:text-[#C58B2A] transition-colors">LinkedIn</a>
+                        <a href="#" className="hover:text-[#C58B2A] transition-colors">Instagram</a>
+                    </div>
+                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em]">© 2026 Antigravity SaaS Labs</p>
+                </div>
+            </footer>
         </div>
     );
 }
