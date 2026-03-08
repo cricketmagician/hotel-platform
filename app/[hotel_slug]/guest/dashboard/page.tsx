@@ -28,7 +28,7 @@ export default function GuestDashboard() {
     const { branding, loading } = useHotelBranding(hotelSlug);
     const { offers, loading: loadingOffers } = useSpecialOffers(branding?.id);
     const requests = useSupabaseRequests(branding?.id);
-    const { roomNumber, checkoutDate, checkoutTime } = useGuestRoom();
+    const { roomNumber, checkoutDate, checkoutTime, numGuests } = useGuestRoom();
 
     const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
     const [scrolled, setScrolled] = useState(false);
@@ -175,7 +175,7 @@ export default function GuestDashboard() {
                         <div className="flex items-center text-slate-400">
                             <div className="flex items-center">
                                 <User className="w-3 h-3 mr-1" />
-                                <span className="text-[10px] font-bold">2 Guests</span>
+                                <span className="text-[10px] font-bold">{numGuests || 1} Guests</span>
                             </div>
                         </div>
                     </div>

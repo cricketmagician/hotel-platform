@@ -61,6 +61,7 @@ export interface Room {
     is_occupied: boolean;
     checkout_date?: string;
     checkout_time?: string;
+    num_guests?: number;
     created_at?: string;
 }
 
@@ -651,7 +652,7 @@ export function useRooms(hotelId?: string) {
 /**
  * Check-in a room logic: generates a 4-digit PIN
  */
-export async function checkInRoom(roomId: string, hotelId: string, checkoutDate?: string, checkoutTime?: string) {
+export async function checkInRoom(roomId: string, hotelId: string, checkoutDate?: string, checkoutTime?: string, numGuests: number = 1) {
     const pin = Math.floor(1000 + Math.random() * 9000).toString(); // 4-digit PIN
 
     if (isDemoMode()) {
@@ -662,7 +663,8 @@ export async function checkInRoom(roomId: string, hotelId: string, checkoutDate?
                 is_occupied: true,
                 booking_pin: pin,
                 checkout_date: checkoutDate,
-                checkout_time: checkoutTime
+                checkout_time: checkoutTime,
+                num_guests: numGuests
             } : r
         );
         saveDemoRooms(hotelId, updatedRooms);
@@ -675,7 +677,8 @@ export async function checkInRoom(roomId: string, hotelId: string, checkoutDate?
             is_occupied: true,
             booking_pin: pin,
             checkout_date: checkoutDate,
-            checkout_time: checkoutTime
+            checkout_time: checkoutTime,
+            num_guests: numGuests
         })
         .eq('id', roomId)
         .eq('hotel_id', hotelId);
@@ -709,7 +712,8 @@ export async function checkOutRoom(roomId: string, hotelId: string) {
             is_occupied: false,
             booking_pin: null,
             checkout_date: null,
-            checkout_time: null
+            checkout_time: null,
+            num_guests: null
         })
         .eq('id', roomId)
         .eq('hotel_id', hotelId);
@@ -743,7 +747,8 @@ export async function checkOutRoomByNumber(hotelId: string, roomNumber: string) 
             is_occupied: false,
             booking_pin: null,
             checkout_date: null,
-            checkout_time: null
+            checkout_time: null,
+            num_guests: null
         })
         .eq('hotel_id', hotelId)
         .eq('room_number', roomNumber);
@@ -961,7 +966,7 @@ export async function saveSupabaseMenuItem(hotelId: string, item: Partial<MenuIt
     }
 
     if (item.id) {
-        return await supabase
+        const { data, error } = await supabase
             .from('menu_items')
             .update({
                 category: item.category,
@@ -972,10 +977,19 @@ export async function saveSupabaseMenuItem(hotelId: string, item: Partial<MenuIt
                 is_available: item.is_available
             })
             .eq('id', item.id);
+        if (error) console.error("Error updating menu item:", error.message, error);
+        return { data, error };
     } else {
-        return await supabase
+        const { data, error } = await supabase
             .from('menu_items')
             .insert([{ ...item, hotel_id: hotelId }]);
+        if (error) {
+            console.error("Error inserting menu item:", error.message, error);
+            if (error.message.includes('Could not find the table')) {
+                alert("Database Table Missing: Please run the Restoration SQL from the Implementation Plan in Supabase.");
+            }
+        }
+        return { data, error };
     }
 }
 

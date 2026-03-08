@@ -10,6 +10,7 @@ interface GuestContextType {
     roomNumber: string;
     checkoutDate?: string;
     checkoutTime?: string;
+    numGuests?: number;
 }
 
 const GuestContext = createContext<GuestContextType>({ roomNumber: "" });
@@ -27,6 +28,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
     const [roomNumber, setRoomNumber] = useState<string>("");
     const [checkoutDate, setCheckoutDate] = useState<string>("");
     const [checkoutTime, setCheckoutTime] = useState<string>("");
+    const [numGuests, setNumGuests] = useState<number>(1);
     const [pin, setPin] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [isVerifying, setIsVerifying] = useState(false);
@@ -50,6 +52,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
         const storedPin = localStorage.getItem(`hotel_pin_${hotelSlug}`);
         const storedCheckoutDate = localStorage.getItem(`hotel_checkout_date_${hotelSlug}`);
         const storedCheckoutTime = localStorage.getItem(`hotel_checkout_time_${hotelSlug}`);
+        const storedNumGuests = localStorage.getItem(`hotel_num_guests_${hotelSlug}`);
 
         console.table({
             Context: "AuthLogic Storage Check",
@@ -71,6 +74,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
             setRoomNumber(effectiveRoom);
             if (storedCheckoutDate) setCheckoutDate(storedCheckoutDate);
             if (storedCheckoutTime) setCheckoutTime(storedCheckoutTime);
+            if (storedNumGuests) setNumGuests(parseInt(storedNumGuests));
 
             if (effectivePin) {
                 console.log(`[${timestamp}] AuthLogic: Auto-verify for ${effectiveRoom}`);
@@ -86,6 +90,10 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                         localStorage.setItem(`hotel_pin_${hotelSlug}`, effectivePin!);
                         if (res.data.checkout_date) localStorage.setItem(`hotel_checkout_date_${hotelSlug}`, res.data.checkout_date);
                         if (res.data.checkout_time) localStorage.setItem(`hotel_checkout_time_${hotelSlug}`, res.data.checkout_time);
+                        if (res.data.num_guests) {
+                            setNumGuests(res.data.num_guests);
+                            localStorage.setItem(`hotel_num_guests_${hotelSlug}`, res.data.num_guests.toString());
+                        }
                     } else {
                         console.warn(`[${timestamp}] AuthLogic: VERIFICATION FAILED.`);
                         console.log(`[${timestamp}] AuthLogic: Reason: ${!res.success ? "Database mismatch or room not occupied" : "Empty data"}`);
@@ -98,6 +106,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                             localStorage.removeItem(`hotel_pin_${hotelSlug}`);
                             localStorage.removeItem(`hotel_checkout_date_${hotelSlug}`);
                             localStorage.removeItem(`hotel_checkout_time_${hotelSlug}`);
+                            localStorage.removeItem(`hotel_num_guests_${hotelSlug}`);
                         }
                         setIsVerified(false);
                     }
@@ -138,6 +147,10 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                 localStorage.setItem(`hotel_pin_${hotelSlug}`, pin);
                 if (res.data.checkout_date) localStorage.setItem(`hotel_checkout_date_${hotelSlug}`, res.data.checkout_date);
                 if (res.data.checkout_time) localStorage.setItem(`hotel_checkout_time_${hotelSlug}`, res.data.checkout_time);
+                if (res.data.num_guests) {
+                    setNumGuests(res.data.num_guests);
+                    localStorage.setItem(`hotel_num_guests_${hotelSlug}`, res.data.num_guests.toString());
+                }
 
                 setCheckoutDate(res.data.checkout_date || "");
                 setCheckoutTime(res.data.checkout_time || "");
@@ -239,7 +252,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <GuestContext.Provider value={{ roomNumber, checkoutDate, checkoutTime }}>
+        <GuestContext.Provider value={{ roomNumber, checkoutDate, checkoutTime, numGuests }}>
             {children}
         </GuestContext.Provider>
     );

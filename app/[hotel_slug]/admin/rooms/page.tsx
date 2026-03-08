@@ -36,11 +36,11 @@ export default function RoomsPage() {
         setIsAdding(false);
     };
 
-    const [checkInDetails, setCheckInDetails] = useState<{ roomId: string, date: string, time: string } | null>(null);
+    const [checkInDetails, setCheckInDetails] = useState<{ roomId: string, date: string, time: string, numGuests: number } | null>(null);
 
     const handleCheckIn = async (roomId: string) => {
         if (!branding?.id || !checkInDetails) return;
-        const { pin, error } = await checkInRoom(roomId, branding.id, checkInDetails.date, checkInDetails.time);
+        const { pin, error } = await checkInRoom(roomId, branding.id, checkInDetails.date, checkInDetails.time, checkInDetails.numGuests);
 
         if (error) {
             console.error("Check-in Error:", error);
@@ -55,7 +55,8 @@ export default function RoomsPage() {
                 is_occupied: true,
                 booking_pin: pin,
                 checkout_date: checkInDetails.date,
-                checkout_time: checkInDetails.time
+                checkout_time: checkInDetails.time,
+                num_guests: checkInDetails.numGuests
             } : r
         ));
 
@@ -242,6 +243,17 @@ export default function RoomsPage() {
                                                         />
                                                     </div>
                                                 </div>
+                                                <div>
+                                                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-1 ml-1">Number of Guests</label>
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        max="10"
+                                                        value={checkInDetails!.numGuests}
+                                                        onChange={(e) => setCheckInDetails({ ...checkInDetails!, numGuests: parseInt(e.target.value) || 1 })}
+                                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-bold text-xs focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                                                    />
+                                                </div>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => handleCheckIn(room.id)}
@@ -260,7 +272,7 @@ export default function RoomsPage() {
                                             </div>
                                         ) : (
                                             <button
-                                                onClick={() => setCheckInDetails({ roomId: room.id, date: new Date().toISOString().split('T')[0], time: "11:00" })}
+                                                onClick={() => setCheckInDetails({ roomId: room.id, date: new Date().toISOString().split('T')[0], time: "11:00", numGuests: 1 })}
                                                 className="w-full flex items-center justify-center py-4 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all active:scale-95"
                                                 style={{ backgroundColor: branding?.primaryColor }}
                                             >
