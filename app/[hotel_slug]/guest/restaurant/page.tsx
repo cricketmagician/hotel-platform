@@ -229,7 +229,7 @@ export default function RestaurantPage() {
                                         key={item.id}
                                         id={item.id}
                                         title={item.title}
-                                        description={item.description}
+                                        description={item.description || ""}
                                         price={item.price}
                                         image={item.image_url}
                                         onAdd={() => addToCart(item)}
@@ -338,7 +338,7 @@ export default function RestaurantPage() {
                                     <RefreshCw className="w-8 h-8 animate-spin" />
                                 ) : (
                                     "Confirm & Order"
-                                ) || "Confirm & Order"}
+                                )}
                             </button>
                         </motion.div>
                     </>
