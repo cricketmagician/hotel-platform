@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useHotelBranding, getAllHotelStaff, updateStaffRole, UserProfile } from "@/utils/store";
-import { Users, Shield, Utensils, Shirt, Bell, Check, Loader2, Search, ArrowLeft, MoreVertical, Edit2 } from "lucide-react";
+import { Users, Shield, Utensils, Shirt, Bell, Check, Loader2, Search, ArrowLeft, MoreVertical, Edit2, UserPlus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function StaffManagement() {
@@ -78,15 +78,29 @@ export default function StaffManagement() {
                     <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">Assign departments to your team members</p>
                 </div>
 
-                <div className="relative w-full md:w-64">
-                    <input
-                        type="text"
-                        placeholder="Search staff..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-white border border-slate-200 rounded-2xl py-3 pl-10 pr-4 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-100 transition-all"
-                    />
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                    <button
+                        onClick={() => {
+                            const link = `${window.location.origin}/${hotelSlug}/staff/register`;
+                            navigator.clipboard.writeText(link);
+                            alert("Staff Registration Link copied to clipboard! Send this to your team.");
+                        }}
+                        className="flex items-center px-5 py-3 rounded-2xl font-bold bg-white text-blue-600 border border-blue-100 hover:bg-blue-50 transition-all text-xs"
+                    >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Registration Link
+                    </button>
+
+                    <div className="relative w-full md:w-64">
+                        <input
+                            type="text"
+                            placeholder="Search staff..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-2xl py-3 pl-10 pr-4 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+                        />
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    </div>
                 </div>
             </div>
 
