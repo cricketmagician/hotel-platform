@@ -291,6 +291,10 @@ export function useHotelBranding(slug: string | undefined) {
                     lunchEnd: data.lunch_end,
                     dinnerStart: data.dinner_start,
                     dinnerEnd: data.dinner_end,
+                    lateCheckoutPhone: data.late_checkout_phone,
+                    lateCheckoutCharge1: data.late_checkout_charge_1,
+                    lateCheckoutCharge2: data.late_checkout_charge_2,
+                    lateCheckoutCharge3: data.late_checkout_charge_3,
                 });
             } else {
                 // Mock branding fallback
@@ -356,6 +360,10 @@ export function useHotelBranding(slug: string | undefined) {
                     lunchEnd: data.lunch_end,
                     dinnerStart: data.dinner_start,
                     dinnerEnd: data.dinner_end,
+                    lateCheckoutPhone: data.late_checkout_phone,
+                    lateCheckoutCharge1: data.late_checkout_charge_1,
+                    lateCheckoutCharge2: data.late_checkout_charge_2,
+                    lateCheckoutCharge3: data.late_checkout_charge_3,
                 });
             })
             .subscribe();
