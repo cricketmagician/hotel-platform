@@ -28,6 +28,7 @@ export interface HotelBranding {
     lateCheckoutCharge3?: string;
     checkoutMessage?: string;
     googleReviewLink?: string;
+    welcomeMessage?: string;
 }
 
 export interface SpecialOffer {
@@ -109,6 +110,20 @@ export const isDemoMode = () => {
     const isPlaceholder = url?.includes('your-project-id') || key?.includes('your-anon-key');
 
     return isMissing || isPlaceholder;
+};
+
+/**
+ * Sanitizes a phone number for WhatsApp links (wa.me)
+ * Removes non-numeric characters and ensures the 91 prefix for Indian numbers
+ */
+export const sanitizePhoneForWA = (phone: string) => {
+    const numeric = phone.replace(/[^0-9]/g, '');
+    // If it's 10 digits, add '91' prefix
+    if (numeric.length === 10) return `91${numeric}`;
+    // If it already starts with 91 and has 12 digits, return as is
+    if (numeric.length === 12 && numeric.startsWith('91')) return numeric;
+    // Otherwise just return the numeric part
+    return numeric;
 };
 
 const DEMO_ROOMS_KEY = 'antigravity_demo_rooms';
@@ -549,6 +564,7 @@ export function useHotelBranding(slug: string | undefined) {
                     lateCheckoutCharge3: data.late_checkout_charge_3,
                     checkoutMessage: data.checkout_message,
                     googleReviewLink: data.google_review_link,
+                    welcomeMessage: data.welcome_message,
                 });
             } else {
                 // Mock branding fallback
@@ -620,6 +636,7 @@ export function useHotelBranding(slug: string | undefined) {
                     lateCheckoutCharge3: data.late_checkout_charge_3,
                     checkoutMessage: data.checkout_message,
                     googleReviewLink: data.google_review_link,
+                    welcomeMessage: data.welcome_message,
                 });
             })
             .subscribe();
@@ -837,6 +854,7 @@ export async function saveHotelBranding(id: string, updates: Partial<HotelBrandi
             late_checkout_charge_3: updates.lateCheckoutCharge3,
             checkout_message: updates.checkoutMessage,
             google_review_link: updates.googleReviewLink,
+            welcome_message: updates.welcomeMessage,
         })
         .eq('id', id);
 

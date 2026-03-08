@@ -48,6 +48,29 @@ export default function ReceptionPage() {
     const handleCheckout = async (guest: Guest) => {
         if (!branding?.id) return;
         if (confirm(`Are you sure you want to checkout Room ${guest.room_number}?`)) {
+            // Trigger WhatsApp Feedback message BEFORE deletion (soft delete/status update in store)
+            if (guest.phone && (branding.checkoutMessage || branding.googleReviewLink)) {
+                let message = branding.checkoutMessage || "Thank you for staying with us! Hope you had a comfortable stay at {hotel_name}. Please share your feedback: ";
+
+                // Replace placeholders
+                message = message
+                    .replace(/{name}/g, guest.name)
+                    .replace(/{hotel_name}/g, branding.name)
+                    .replace(/{room}/g, guest.room_number);
+
+                if (branding.googleReviewLink) {
+                    message += `\n\nReview us on Google: ${branding.googleReviewLink}`;
+                }
+
+                const encodedMessage = encodeURIComponent(message);
+                const numericPhone = guest.phone.replace(/[^0-9]/g, '');
+                // Ensure 91 prefix if missing and it's 10 digits
+                const finalPhone = (numericPhone.length === 10) ? `91${numericPhone}` : numericPhone;
+
+                const whatsappUrl = `https://wa.me/${finalPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+            }
+
             const { error } = await deleteGuest(guest.id, branding.id, guest.room_number);
             if (!error) loadData();
         }
@@ -56,6 +79,8 @@ export default function ReceptionPage() {
     const sendQuickWA = (guest: Guest, type: 'menu' | 'checkout' | 'welcome') => {
         let msg = "";
         const dashboardUrl = `${window.location.origin}/${hotelSlug}/guest/dashboard`;
+        const numericPhone = guest.phone.replace(/[^0-9]/g, '');
+        const finalPhone = (numericPhone.length === 10) ? `91${numericPhone}` : numericPhone;
 
         if (type === 'menu') {
             msg = `Hello ${guest.name} 👋\n\nHope you're having a great stay. Here is our digital menu and service list: ${dashboardUrl}`;
@@ -65,7 +90,7 @@ export default function ReceptionPage() {
             msg = `Hello ${guest.name} 👋\n\nWelcome to ${branding?.name}! Your room is ${guest.room_number}. You can order food here: ${dashboardUrl}`;
         }
 
-        const url = `https://wa.me/91${guest.phone}?text=${encodeURIComponent(msg)}`;
+        const url = `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`;
         window.open(url, "_blank");
     };
 

@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS hotels (
     late_checkout_charge_3 TEXT DEFAULT 'Full Day Rate',
     checkout_message TEXT,
     google_review_link TEXT,
+    welcome_message TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -259,3 +260,12 @@ BEGIN
         ALTER PUBLICATION supabase_realtime ADD TABLE guests;
     END IF;
 END $$;
+
+-- 7. WhatsApp Automation & Late Checkout (Migration)
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS welcome_message TEXT;
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS checkout_message TEXT;
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS google_review_link TEXT;
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS late_checkout_phone TEXT;
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS late_checkout_charge_1 TEXT DEFAULT 'Complimentary';
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS late_checkout_charge_2 TEXT DEFAULT '₹1,500';
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS late_checkout_charge_3 TEXT DEFAULT 'Full Day Rate';

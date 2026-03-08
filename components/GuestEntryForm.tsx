@@ -23,9 +23,29 @@ export default function GuestEntryForm({ isOpen, onClose, branding, onSuccess }:
     });
 
     const generateWhatsAppUrl = (name: string, phone: string, room: string) => {
-        const message = `Hello ${name} 👋\n\nWelcome to ${branding.name}.\n\nYour Room Number: ${room}\n\nYou can order food or request services here:\n${window.location.origin}/${branding.slug}/guest/dashboard\n\nHave a great stay!`;
+        const dashboardUrl = `${window.location.origin}/${branding.slug}/guest/dashboard`;
+        const defaultMsg = `Hello ${name} 👋\n\nWelcome to ${branding.name}.\n\nYour Room Number: ${room}\n\nYou can order food or request services here:\n${dashboardUrl}\n\nHave a great stay!`;
+
+        let message = branding.welcomeMessage || defaultMsg;
+
+        // Personalize if placeholder exists or just append if it's custom
+        if (branding.welcomeMessage) {
+            message = message
+                .replace(/{name}/g, name)
+                .replace(/{room}/g, room)
+                .replace(/{link}/g, dashboardUrl);
+
+            // If the user didn't use placeholders, append the essential info for better DX
+            if (!branding.welcomeMessage.includes('{room}') && !branding.welcomeMessage.includes(room)) {
+                message += `\n\nRoom: ${room}\nServices: ${dashboardUrl}`;
+            }
+        }
+
         const encoded = encodeURIComponent(message);
-        return `https://wa.me/91${phone}?text=${encoded}`;
+        const numericPhone = phone.replace(/[^0-9]/g, '');
+        const finalPhone = (numericPhone.length === 10) ? `91${numericPhone}` : numericPhone;
+
+        return `https://wa.me/${finalPhone}?text=${encoded}`;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {

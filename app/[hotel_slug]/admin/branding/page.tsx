@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useHotelBranding, saveHotelBranding, HotelBranding, useSpecialOffers, saveSpecialOffer, deleteSpecialOffer, SpecialOffer } from "@/utils/store";
-import { Palette, Layout, Type, Save, Check, RefreshCw, Phone, Plus, Trash2, Image as ImageIcon, Tag, Utensils, Clock, MessageSquare } from "lucide-react";
+import { Palette, Layout, Type, Save, Check, RefreshCw, Phone, Plus, Trash2, Image as ImageIcon, Tag, Utensils, Clock, MessageSquare, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function BrandingPage() {
@@ -341,6 +341,27 @@ export default function BrandingPage() {
                                         />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                        <div className="flex items-center mb-6">
+                            <Sparkles className="w-5 h-5 text-blue-600 mr-3" style={{ color: config.primaryColor }} />
+                            <h2 className="text-xl font-black text-slate-900">Welcome Message</h2>
+                        </div>
+                        <p className="text-xs text-slate-400 font-medium mb-6">This message will be sent to guests via WhatsApp immediately after they are assigned a room.</p>
+
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">WhatsApp Welcome Text</label>
+                                <textarea
+                                    placeholder="e.g. Welcome to our hotel! We're glad to have you. Your room is ready."
+                                    value={config.welcomeMessage || ""}
+                                    onChange={(e) => setConfig({ ...config, welcomeMessage: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 transition-all min-h-[100px] resize-none text-sm"
+                                />
+                                <p className="text-[10px] text-slate-400 mt-2 font-medium italic">Tip: Mention their Room Number and the Digital Dashboard link.</p>
                             </div>
                         </div>
                     </section>
