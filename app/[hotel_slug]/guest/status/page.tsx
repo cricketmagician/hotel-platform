@@ -13,9 +13,9 @@ export default function StatusPage() {
     const router = useRouter();
     const params = useParams();
     const hotelSlug = params?.hotel_slug as string;
-    const { roomNumber } = useGuestRoom();
+    const { roomNumber, checkedInAt } = useGuestRoom();
     const { branding } = useHotelBranding(hotelSlug);
-    const requests = useSupabaseRequests(branding?.id, roomNumber);
+    const requests = useSupabaseRequests(branding?.id, roomNumber, checkedInAt);
     const prevRequestsRef = useRef(requests);
 
     useEffect(() => {

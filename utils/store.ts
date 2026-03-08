@@ -62,6 +62,7 @@ export interface Room {
     checkout_date?: string;
     checkout_time?: string;
     num_guests?: number;
+    checked_in_at?: number | null;
     created_at?: string;
 }
 
@@ -328,7 +329,7 @@ export function useHotelBranding(slug: string | undefined) {
 /**
  * Hook to fetch and subscribe to requests for a specific hotel in real-time
  */
-export function useSupabaseRequests(hotelId?: string, roomNumber?: string) {
+export function useSupabaseRequests(hotelId?: string, roomNumber?: string, checkedInAt?: number | null) {
     const [requests, setRequests] = useState<HotelRequest[]>([]);
 
     useEffect(() => {
@@ -337,11 +338,11 @@ export function useSupabaseRequests(hotelId?: string, roomNumber?: string) {
         const fetchRequests = async () => {
             if (isDemoMode()) {
                 const allRequests = getDemoRequests(hotelId);
-                if (roomNumber) {
-                    setRequests(allRequests.filter(r => r.room === roomNumber));
-                } else {
-                    setRequests(allRequests);
+                let filtered = roomNumber ? allRequests.filter(r => r.room === roomNumber) : allRequests;
+                if (checkedInAt) {
+                    filtered = filtered.filter(r => r.timestamp >= checkedInAt);
                 }
+                setRequests(filtered);
                 return;
             }
 
@@ -352,6 +353,10 @@ export function useSupabaseRequests(hotelId?: string, roomNumber?: string) {
 
             if (roomNumber) {
                 query = query.eq('room', roomNumber);
+            }
+
+            if (checkedInAt) {
+                query = query.gte('timestamp', checkedInAt);
             }
 
             const { data, error } = await query.order('timestamp', { ascending: false });
@@ -365,11 +370,11 @@ export function useSupabaseRequests(hotelId?: string, roomNumber?: string) {
             const handleUpdate = (e: any) => {
                 if (e.detail?.hotelId === hotelId || e.type === 'storage') {
                     const allReqs = getDemoRequests(hotelId);
-                    if (roomNumber) {
-                        setRequests(allReqs.filter(r => r.room === roomNumber));
-                    } else {
-                        setRequests(allReqs);
+                    let filtered = roomNumber ? allReqs.filter(r => r.room === roomNumber) : allReqs;
+                    if (checkedInAt) {
+                        filtered = filtered.filter(r => r.timestamp >= checkedInAt);
                     }
+                    setRequests(filtered);
                 }
             };
             window.addEventListener('demo_requests_updated', handleUpdate);
@@ -679,7 +684,8 @@ export async function checkInRoom(roomId: string, hotelId: string, checkoutDate?
                 booking_pin: pin,
                 checkout_date: checkoutDate,
                 checkout_time: checkoutTime,
-                num_guests: numGuests
+                num_guests: numGuests,
+                checked_in_at: Date.now()
             } : r
         );
         saveDemoRooms(hotelId, updatedRooms);
@@ -693,7 +699,8 @@ export async function checkInRoom(roomId: string, hotelId: string, checkoutDate?
             booking_pin: pin,
             checkout_date: checkoutDate,
             checkout_time: checkoutTime,
-            num_guests: numGuests
+            num_guests: numGuests,
+            checked_in_at: Date.now()
         })
         .eq('id', roomId)
         .eq('hotel_id', hotelId);
