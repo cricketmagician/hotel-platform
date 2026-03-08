@@ -21,6 +21,10 @@ export interface HotelBranding {
     lunchEnd?: string;
     dinnerStart?: string;
     dinnerEnd?: string;
+    lateCheckoutPhone?: string;
+    lateCheckoutCharge1?: string;
+    lateCheckoutCharge2?: string;
+    lateCheckoutCharge3?: string;
 }
 
 export interface SpecialOffer {
@@ -312,7 +316,11 @@ export function useHotelBranding(slug: string | undefined) {
                         primaryColor: '#2563eb',
                         accentColor: '#3b82f6',
                         logoImage: '/images/luxury/logo.png',
-                        receptionPhone: '+91 99999 99999'
+                        receptionPhone: '+91 99999 99999',
+                        lateCheckoutPhone: '+91 99999 99999',
+                        lateCheckoutCharge1: 'Complimentary',
+                        lateCheckoutCharge2: '₹1,500',
+                        lateCheckoutCharge3: 'Full Day Rate'
                     });
                 }
             }
@@ -553,6 +561,10 @@ export async function saveHotelBranding(id: string, updates: Partial<HotelBrandi
             lunch_end: updates.lunchEnd,
             dinner_start: updates.dinnerStart,
             dinner_end: updates.dinnerEnd,
+            late_checkout_phone: updates.lateCheckoutPhone,
+            late_checkout_charge_1: updates.lateCheckoutCharge1,
+            late_checkout_charge_2: updates.lateCheckoutCharge2,
+            late_checkout_charge_3: updates.lateCheckoutCharge3,
         })
         .eq('id', id);
 

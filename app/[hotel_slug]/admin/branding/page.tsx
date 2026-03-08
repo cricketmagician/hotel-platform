@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useHotelBranding, saveHotelBranding, HotelBranding, useSpecialOffers, saveSpecialOffer, deleteSpecialOffer, SpecialOffer } from "@/utils/store";
-import { Palette, Layout, Type, Save, Check, RefreshCw, Phone, Plus, Trash2, Image as ImageIcon, Tag, Utensils } from "lucide-react";
+import { Palette, Layout, Type, Save, Check, RefreshCw, Phone, Plus, Trash2, Image as ImageIcon, Tag, Utensils, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function BrandingPage() {
@@ -179,6 +179,60 @@ export default function BrandingPage() {
                                     onChange={(e) => setConfig({ ...config, accentColor: e.target.value })}
                                     className="w-full h-12 rounded-xl cursor-pointer"
                                 />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                        <div className="flex items-center mb-6">
+                            <Clock className="w-5 h-5 text-blue-600 mr-3" style={{ color: config.primaryColor }} />
+                            <h2 className="text-xl font-black text-slate-900">Late Checkout Settings</h2>
+                        </div>
+                        <p className="text-xs text-slate-400 font-medium mb-6">Manage Late Checkout pricing and contact details for guests.</p>
+
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Late Checkout Contact (WhatsApp/Call)</label>
+                                <div className="flex items-center bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3 focus-within:ring-2 transition-all">
+                                    <Phone className="w-4 h-4 text-slate-400 mr-3" />
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. +91 98765 43210"
+                                        value={config.lateCheckoutPhone || ""}
+                                        onChange={(e) => setConfig({ ...config, lateCheckoutPhone: e.target.value })}
+                                        className="bg-transparent w-full font-bold text-slate-900 outline-none"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Slot 1 (Till 2 PM)</label>
+                                    <input
+                                        type="text"
+                                        value={config.lateCheckoutCharge1 || ""}
+                                        onChange={(e) => setConfig({ ...config, lateCheckoutCharge1: e.target.value })}
+                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Slot 2 (2 PM - 6 PM)</label>
+                                    <input
+                                        type="text"
+                                        value={config.lateCheckoutCharge2 || ""}
+                                        onChange={(e) => setConfig({ ...config, lateCheckoutCharge2: e.target.value })}
+                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Slot 3 (After 6 PM)</label>
+                                    <input
+                                        type="text"
+                                        value={config.lateCheckoutCharge3 || ""}
+                                        onChange={(e) => setConfig({ ...config, lateCheckoutCharge3: e.target.value })}
+                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 transition-all"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </section>

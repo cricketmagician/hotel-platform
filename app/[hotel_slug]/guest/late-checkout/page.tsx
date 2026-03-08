@@ -36,21 +36,34 @@ export default function LateCheckoutPage() {
     };
 
     const charges = [
-        { time: "Until 2:00 PM", price: "Complimentary", note: "Subject to availability" },
-        { time: "2:00 PM - 6:00 PM", price: "₹1,500", note: "Flat rate extension" },
-        { time: "After 6:00 PM", price: "Full Day Rate", note: "Additional night charge" },
+        {
+            time: "Until 2:00 PM",
+            price: branding?.lateCheckoutCharge1 || "Complimentary",
+            note: "Subject to availability"
+        },
+        {
+            time: "2:00 PM - 6:00 PM",
+            price: branding?.lateCheckoutCharge2 || "₹1,500",
+            note: "Flat rate extension"
+        },
+        {
+            time: "After 6:00 PM",
+            price: branding?.lateCheckoutCharge3 || "Full Day Rate",
+            note: "Additional night charge"
+        },
     ];
 
     const handleWhatsApp = () => {
-        const phone = branding?.receptionPhone || "+919999999999";
+        const phone = branding?.lateCheckoutPhone || branding?.receptionPhone || "+919999999999";
         const messageText = `Hi ${branding?.name || 'Reception'}, I am in Room ${roomNumber || '[Room]'} and I would like to request a Late Checkout. Please let me know the availability.`;
         const message = encodeURIComponent(messageText);
         window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
     };
 
     const handleCall = () => {
-        if (branding?.receptionPhone) {
-            window.location.href = `tel:${branding.receptionPhone}`;
+        const phone = branding?.lateCheckoutPhone || branding?.receptionPhone;
+        if (phone) {
+            window.location.href = `tel:${phone}`;
         }
     };
 

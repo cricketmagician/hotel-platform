@@ -126,8 +126,8 @@ export default function GuestDashboard() {
                     </motion.div>
                     <div className="flex flex-col">
                         <motion.h1
-                            animate={{ fontSize: scrolled ? "14px" : "16px" }}
-                            className="font-serif text-slate-900 leading-none tracking-tight whitespace-nowrap"
+                            animate={{ fontSize: scrolled ? "16px" : "22px" }}
+                            className="font-serif font-black text-slate-900 leading-none tracking-tight whitespace-nowrap"
                         >
                             {branding?.name || "Premium Hotel"}
                             {scrolled && <span className="text-slate-300 mx-2 font-normal">•</span>}
@@ -139,7 +139,7 @@ export default function GuestDashboard() {
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mt-1"
+                                    className="text-[8px] font-black uppercase tracking-[0.2em] text-amber-600 mt-1"
                                 >
                                     Concierge Active
                                 </motion.p>
@@ -150,10 +150,10 @@ export default function GuestDashboard() {
 
                 <motion.div
                     animate={{ scale: scrolled ? 0.9 : 1 }}
-                    className="px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full flex items-center shadow-sm"
+                    className="px-2 py-1 bg-emerald-50 border border-emerald-100 rounded-full flex items-center shadow-sm"
                 >
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></div>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Secure Access</span>
+                    <div className="w-1 h-1 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></div>
+                    <span className="text-[7px] font-black uppercase tracking-widest text-emerald-600">Secure Access</span>
                 </motion.div>
             </motion.header>
 
