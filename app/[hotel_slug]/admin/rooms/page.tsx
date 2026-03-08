@@ -16,7 +16,7 @@ export default function RoomsPage() {
     const [newRoomNumber, setNewRoomNumber] = useState("");
 
     React.useEffect(() => {
-        if (initialRooms && initialRooms.length > 0) {
+        if (initialRooms) {
             setRoomsList(initialRooms);
         }
     }, [initialRooms]);

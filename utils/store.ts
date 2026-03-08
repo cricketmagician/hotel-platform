@@ -521,7 +521,9 @@ export async function addRoom(hotelId: string, roomNumber: string) {
         .insert([{
             hotel_id: hotelId,
             room_number: roomNumber
-        }]);
+        }])
+        .select()
+        .single();
 
     if (error) console.error("Error adding room:", error);
     return { data, error };
