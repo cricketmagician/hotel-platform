@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { LayoutDashboard, Inbox, Hotel, Utensils, Settings, Users, BarChart, Receipt, Shirt, ConciergeBell } from "lucide-react";
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 export default function AdminLayout({
     children,
@@ -11,10 +11,11 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const params = useParams();
+    const pathname = usePathname();
     const hotelSlug = params?.hotel_slug as string;
 
     // Check if we are on the login page
-    const isLoginPage = typeof window !== 'undefined' && window.location.pathname.endsWith('/login');
+    const isLoginPage = pathname?.endsWith('/login');
 
     const navItems = [
         { name: "Main Dashboard", href: `/${hotelSlug}/admin/dashboard`, icon: <LayoutDashboard className="w-5 h-5" /> },

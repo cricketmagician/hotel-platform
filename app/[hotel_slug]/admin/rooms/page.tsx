@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import QRCode from "react-qr-code";
-import { Printer, Key, DoorClosed, Plus } from "lucide-react";
-import { useHotelBranding, useRooms, addRoom, checkInRoom, checkOutRoom } from "@/utils/store";
+import { Printer, Key, DoorClosed, Plus, Trash2 } from "lucide-react";
+import { useHotelBranding, useRooms, addRoom, checkInRoom, checkOutRoom, deleteRoom } from "@/utils/store";
 
 export default function RoomsPage() {
     const params = useParams();
@@ -75,6 +75,57 @@ export default function RoomsPage() {
         }
     };
 
+    const handleDeleteRoom = async (roomId: string) => {
+        if (!branding?.id) return;
+        if (confirm("Are you sure you want to delete this room? This action cannot be undone.")) {
+            await deleteRoom(roomId, branding.id);
+            setRoomsList(prev => prev.filter(r => r.id !== roomId));
+        }
+    };
+
+    const handlePrintQR = (roomNumber: string, qrUrl: string) => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print QR - Room ${roomNumber}</title>
+                    <style>
+                        body { 
+                            font-family: 'Inter', sans-serif; 
+                            display: flex; 
+                            flex-direction: column; 
+                            align-items: center; 
+                            justify-content: center; 
+                            height: 100vh; 
+                            margin: 0;
+                            text-align: center;
+                        }
+                        .qr-container { padding: 40px; border: 2px solid #eee; border-radius: 40px; }
+                        h1 { font-size: 48px; margin-bottom: 10px; font-weight: 900; color: #1e293b; }
+                        p { font-size: 18px; color: #64748b; margin-bottom: 30px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 900; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Room ${roomNumber}</h1>
+                    <p>Scan for Digital Concierge</p>
+                    <div id="qr" class="qr-container"></div>
+                    <script type="text/javascript">
+                        window.onload = function() {
+                            // Inject QR code using SVG from parent context for simplicity
+                            const qrSvg = window.opener.document.querySelector('.qr-container-target-${roomNumber} svg').outerHTML;
+                            document.getElementById('qr').innerHTML = qrSvg;
+                            window.print();
+                            window.onafterprint = function() { window.close(); };
+                        };
+                    </script>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+    };
+
     return (
         <div className="p-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-10">
@@ -135,7 +186,7 @@ export default function RoomsPage() {
                                 <h2 className="text-3xl font-black mb-1 text-slate-900 mt-4">{room.room_number}</h2>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Room</p>
 
-                                <div className="bg-white p-6 rounded-[2rem] border-2 border-dashed border-slate-100 mb-6 group-hover:border-blue-100 transition-colors">
+                                <div className={`bg-white p-6 rounded-[2rem] border-2 border-dashed border-slate-100 mb-6 group-hover:border-blue-100 transition-colors qr-container-target-${room.room_number}`}>
                                     <QRCode value={qrUrl} size={140} level="M" />
                                 </div>
 
@@ -213,9 +264,21 @@ export default function RoomsPage() {
                                     </div>
                                 )}
 
-                                <button className="w-full mt-3 flex items-center justify-center py-3 bg-transparent text-slate-500 font-bold rounded-xl hover:bg-slate-50 transition-all">
-                                    <Printer className="w-4 h-4 mr-2" /> Print QR
-                                </button>
+                                <div className="w-full flex gap-3 mt-3">
+                                    <button
+                                        onClick={() => handlePrintQR(room.room_number, qrUrl)}
+                                        className="flex-1 flex items-center justify-center py-3 bg-slate-50 text-slate-500 font-bold rounded-xl hover:bg-slate-100 transition-all border border-slate-100"
+                                    >
+                                        <Printer className="w-4 h-4 mr-2" /> Print QR
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteRoom(room.id)}
+                                        className="px-4 py-3 bg-red-50 text-red-500 font-bold rounded-xl hover:bg-red-100 transition-all border border-red-50 flex items-center justify-center"
+                                        title="Delete Room"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         );
                     })}

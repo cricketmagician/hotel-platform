@@ -528,6 +528,27 @@ export async function addRoom(hotelId: string, roomNumber: string) {
 }
 
 /**
+ * Delete a room from the hotel
+ */
+export async function deleteRoom(roomId: string, hotelId: string) {
+    if (isDemoMode()) {
+        const rooms = getDemoRooms(hotelId);
+        const updatedRooms = rooms.filter(r => r.id !== roomId);
+        saveDemoRooms(hotelId, updatedRooms);
+        return { error: null };
+    }
+
+    const { error } = await supabase
+        .from('rooms')
+        .delete()
+        .eq('id', roomId)
+        .eq('hotel_id', hotelId);
+
+    if (error) console.error("Error deleting room:", error);
+    return { error };
+}
+
+/**
  * Hook to fetch and subscribe to rooms for a specific hotel in real-time
  */
 export function useRooms(hotelId?: string) {
