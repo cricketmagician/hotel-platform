@@ -689,6 +689,40 @@ export async function checkOutRoom(roomId: string, hotelId: string) {
 }
 
 /**
+ * Check-out a room by its room number: clear the PIN
+ */
+export async function checkOutRoomByNumber(hotelId: string, roomNumber: string) {
+    if (isDemoMode()) {
+        const rooms = getDemoRooms(hotelId);
+        const updatedRooms = rooms.map(r =>
+            r.room_number === roomNumber ? {
+                ...r,
+                is_occupied: false,
+                booking_pin: null,
+                checkout_date: undefined,
+                checkout_time: undefined
+            } : r
+        );
+        saveDemoRooms(hotelId, updatedRooms);
+        return { data: null, error: null };
+    }
+
+    const { data, error } = await supabase
+        .from('rooms')
+        .update({
+            is_occupied: false,
+            booking_pin: null,
+            checkout_date: null,
+            checkout_time: null
+        })
+        .eq('hotel_id', hotelId)
+        .eq('room_number', roomNumber);
+
+    if (error) console.error("Error checking out room by number:", error);
+    return { data, error };
+}
+
+/**
  * Verify a room's booking PIN. Useful for the guest UI.
  */
 export async function verifyBookingPin(hotelId: string, roomNumber: string, pin: string) {
@@ -699,20 +733,14 @@ export async function verifyBookingPin(hotelId: string, roomNumber: string, pin:
 
         const match = rooms.find(r => r.room_number === roomNumber && r.booking_pin === pin && r.is_occupied);
 
-        // FAIL-SAFE: Always allow 101/1234 in demo mode if the list find fails
-        if (match || (roomNumber === '101' && pin === '1234')) {
-            console.log("Demo Mode: PIN Verified Successfully (via match or fallback)!");
-            return { success: true, data: match || { id: 'r1', hotel_id: hotelId, room_number: '101', is_occupied: true, booking_pin: '1234' } };
+        if (match) {
+            console.log("Demo Mode: PIN Verified Successfully!");
+            return { success: true, data: match };
         }
         console.warn("Demo Mode: Invalid PIN or Room Not Occupied.");
         return { success: false, data: null };
     }
 
-    // FAIL-SAFE: Always allow 101/1234 if Supabase is being difficult or for quick testing
-    if (roomNumber === '101' && pin === '1234') {
-        console.log("PIN Verified via Global Fallback (101/1234)");
-        return { success: true, data: { id: 'test-room-id', hotel_id: hotelId, room_number: '101', is_occupied: true, booking_pin: '1234' } };
-    }
 
     console.log(`AuthStore: Querying Supabase for Room ${roomNumber} in Hotel ${hotelId}`);
     const { data, error } = await supabase

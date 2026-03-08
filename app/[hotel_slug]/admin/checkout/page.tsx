@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
-import { useSupabaseRequests, HotelRequest, useHotelBranding, settleRoomRequests, useRooms, checkOutRoom } from "@/utils/store";
+import { useSupabaseRequests, HotelRequest, useHotelBranding, settleRoomRequests, checkOutRoomByNumber } from "@/utils/store";
 import { Receipt, CreditCard, CheckCircle, ChevronRight, Search, Printer, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HotelLogo } from "@/components/HotelLogo";
@@ -12,7 +12,6 @@ export default function AdminCheckoutPage() {
     const hotelSlug = params?.hotel_slug as string;
     const { branding } = useHotelBranding(hotelSlug);
     const requests = useSupabaseRequests(branding?.id);
-    const { rooms } = useRooms(branding?.id);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
@@ -41,11 +40,8 @@ export default function AdminCheckoutPage() {
         // 1. Mark financial requests as paid
         await settleRoomRequests(branding.id, roomNumber);
 
-        // 2. Clear the room PIN and mark as unoccupied
-        const roomData = rooms.find(r => r.room_number === roomNumber);
-        if (roomData) {
-            await checkOutRoom(roomData.id, branding.id);
-        }
+        // 2. Clear the room PIN and mark as unoccupied using room number directly
+        await checkOutRoomByNumber(branding.id, roomNumber);
 
         setTimeout(() => {
             setIsSettling(false);
