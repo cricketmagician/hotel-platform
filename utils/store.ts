@@ -749,6 +749,7 @@ export async function verifyBookingPin(hotelId: string, roomNumber: string, pin:
         .eq('hotel_id', hotelId)
         .eq('room_number', roomNumber)
         .eq('booking_pin', pin)
+        .eq('is_occupied', true)
         .single();
 
     if (error) {

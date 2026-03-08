@@ -40,7 +40,13 @@ export default function RoomsPage() {
 
     const handleCheckIn = async (roomId: string) => {
         if (!branding?.id || !checkInDetails) return;
-        const { pin } = await checkInRoom(roomId, branding.id, checkInDetails.date, checkInDetails.time);
+        const { pin, error } = await checkInRoom(roomId, branding.id, checkInDetails.date, checkInDetails.time);
+
+        if (error) {
+            console.error("Check-in Error:", error);
+            alert(`Failed to check in: ${error.message || "Unknown error"}. Check if database schema is updated.`);
+            return;
+        }
 
         // Local update for Demo Mode
         setRoomsList(prev => prev.map(r =>

@@ -76,8 +76,8 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                 setPin(effectivePin);
                 setIsVerifying(true);
                 verifyBookingPin(branding.id, effectiveRoom, effectivePin).then(res => {
-                    if (res.success) {
-                        console.log(`[${timestamp}] AuthLogic: SUCCESS`);
+                    if (res.success && res.data) {
+                        console.log(`[${timestamp}] AuthLogic: SUCCESS. Session Valid.`);
                         setIsVerified(true);
                         setCheckoutDate(res.data.checkout_date || "");
                         setCheckoutTime(res.data.checkout_time || "");
@@ -86,8 +86,12 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                         if (res.data.checkout_date) localStorage.setItem(`hotel_checkout_date_${hotelSlug}`, res.data.checkout_date);
                         if (res.data.checkout_time) localStorage.setItem(`hotel_checkout_time_${hotelSlug}`, res.data.checkout_time);
                     } else {
-                        console.warn(`[${timestamp}] AuthLogic: FAIL. Clearing session.`);
-                        if (effectiveRoom === storedRoom) {
+                        console.warn(`[${timestamp}] AuthLogic: VERIFICATION FAILED. clearing credentials.`);
+                        console.log(`[${timestamp}] AuthLogic: Reason: ${!res.success ? "Database mismatch or room not occupied" : "Empty data"}`);
+
+                        // ONLY clear if we actually expected this room/pin to work
+                        if (effectiveRoom === storedRoom && effectivePin === storedPin) {
+                            console.log(`[${timestamp}] AuthLogic: Persistence Cleared.`);
                             localStorage.removeItem(`hotel_room_${hotelSlug}`);
                             localStorage.removeItem(`hotel_pin_${hotelSlug}`);
                             localStorage.removeItem(`hotel_checkout_date_${hotelSlug}`);
@@ -97,7 +101,7 @@ function AuthLogic({ children }: { children: React.ReactNode }) {
                     }
                     setIsVerifying(false);
                 }).catch(err => {
-                    console.error(`[${timestamp}] AuthLogic: CRASH`, err);
+                    console.error(`[${timestamp}] AuthLogic: CRASH during verify`, err);
                     setIsVerified(false);
                     setIsVerifying(false);
                 });
