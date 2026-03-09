@@ -34,6 +34,7 @@ export default function GuestDashboard() {
     const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
     const [scrolled, setScrolled] = useState(false);
     const [showTeaOptions, setShowTeaOptions] = useState(false);
+    const [showWaterOptions, setShowWaterOptions] = useState(false);
     const [showCleaningOptions, setShowCleaningOptions] = useState(false);
     const [showCleaningTimePicker, setShowCleaningTimePicker] = useState(false);
 
@@ -385,6 +386,44 @@ export default function GuestDashboard() {
                                                 </button>
                                             </div>
                                         </motion.div>
+                                    ) : req.type === "Water" && showWaterOptions ? (
+                                        <motion.div
+                                            key="water-options"
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            className="bg-slate-900 p-4 rounded-[2.5rem] flex flex-col justify-between min-h-[125px] border border-blue-500/50 shadow-2xl relative overflow-hidden"
+                                        >
+                                            <div className="flex justify-between items-center mb-2">
+                                                <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest pl-2">Quantity</p>
+                                                <button
+                                                    onClick={() => setShowWaterOptions(false)}
+                                                    className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-slate-400"
+                                                >
+                                                    <AlertCircle className="w-4 h-4 rotate-45" />
+                                                </button>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        handleQuickRequest("Mineral Water", "1 Bottle");
+                                                        setShowWaterOptions(false);
+                                                    }}
+                                                    className="w-full py-2 bg-white/5 hover:bg-white/10 rounded-xl text-white text-xs font-bold transition-all flex items-center justify-center border border-white/5"
+                                                >
+                                                    <Droplets className="w-3 h-3 mr-2 text-blue-500" /> 1 Bottle
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        handleQuickRequest("Mineral Water", "2 Bottles");
+                                                        setShowWaterOptions(false);
+                                                    }}
+                                                    className="w-full py-2 bg-white/5 hover:bg-white/10 rounded-xl text-white text-xs font-bold transition-all flex items-center justify-center border border-white/5"
+                                                >
+                                                    <Droplets className="w-3 h-3 mr-2 text-blue-500" /> 2 Bottles
+                                                </button>
+                                            </div>
+                                        </motion.div>
                                     ) : (
                                         <motion.button
                                             key="button"
@@ -394,6 +433,8 @@ export default function GuestDashboard() {
                                             onClick={() => {
                                                 if (req.type === "TeaCoffee") {
                                                     setShowTeaOptions(true);
+                                                } else if (req.type === "Water") {
+                                                    setShowWaterOptions(true);
                                                 } else if (req.type === "Cleaning") {
                                                     setShowCleaningOptions(true);
                                                 } else {
