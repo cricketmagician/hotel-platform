@@ -53,6 +53,7 @@ export default function StaffRegisterPage() {
                         user_id: authData.user.id,
                         hotel_id: branding.id,
                         full_name: formData.full_name,
+                        email: formData.email,
                         role: 'staff' // Default role
                     }
                 ]);

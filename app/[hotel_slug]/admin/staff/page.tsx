@@ -64,8 +64,9 @@ export default function StaffManagement() {
     };
 
     const filteredStaff = staff.filter(s =>
-        s.user_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.role.toLowerCase().includes(searchQuery.toLowerCase())
+        (s.full_name?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (s.email?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (s.role.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
     if (brandingLoading || loading) return (
@@ -113,7 +114,7 @@ export default function StaffManagement() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-50/50">
-                                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">User ID / Email</th>
+                                <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Team Member</th>
                                 <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Role</th>
                                 <th className="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Set Department</th>
                             </tr>
@@ -132,8 +133,12 @@ export default function StaffManagement() {
                                                     <Users className="w-5 h-5" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-slate-900 text-sm">{member.user_id}</p>
-                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Linked Account</p>
+                                                    <p className="font-bold text-slate-900 text-sm">
+                                                        {member.full_name || "New Staff Member"}
+                                                    </p>
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                        {member.email || member.user_id.substring(0, 8) + '...'}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </td>
