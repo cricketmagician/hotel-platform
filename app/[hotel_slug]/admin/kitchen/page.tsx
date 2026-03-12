@@ -13,7 +13,7 @@ export default function KitchenDashboard() {
             hotelSlug={hotelSlug}
             department="kitchen"
             title="Kitchen Board"
-            allowedTypes={["Water", "Dining", "Restaurant", "Room Service", "Food"]}
+            allowedTypes={["Water", "Dining", "Restaurant", "Room Service", "Food", "Tea", "Coffee", "TeaCoffee"]}
             icon={<Utensils className="w-8 h-8 text-amber-500" />}
         />
     );

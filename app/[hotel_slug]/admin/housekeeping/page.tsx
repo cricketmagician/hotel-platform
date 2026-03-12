@@ -13,7 +13,7 @@ export default function HousekeepingDashboard() {
             hotelSlug={hotelSlug}
             department="housekeeping"
             title="Housekeeping"
-            allowedTypes={["Housekeeping", "Laundry", "Cleaning", "Towels", "Pillows"]}
+            allowedTypes={["Housekeeping", "Laundry", "Cleaning", "Towels", "Pillows", "Towel"]}
             icon={<Shirt className="w-8 h-8 text-purple-500" />}
         />
     );
